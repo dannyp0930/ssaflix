@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ person.username }}의 프로필 페이지</h1>
+  {% with followings=person.followings.all followers=person.followers.all %}
+    <div id="is-same" data-person-id="{{ person.pk }}" data-user-id="{{ user.pk }}">
+      <div id="follow-cnt">
+        팔로잉 : {{ followings|length }} / 팔로워 : {{ followers|length }}
+      </div>
+      {% if request.user != person %}
+        <div>
+          <form id="follow-form">
+            {% csrf_token %}
+            {% if request.user in followers %}
+              <button id="followBtn" class="btn btn-secondary"><i id="followIcon" class="fas fa-users-slash"></i></button>
+            {% else %}
+              <button id="followBtn" class="btn btn-primary"><i id="followIcon" class="fas fa-user-friends"></i></button>
+            {% endif %}
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  {% endwith %}
+
+  <script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    const followForm = document.querySelector('#follow-form')
+    const isSame = document.querySelector('#is-same')
+    const {personId, userId} = isSame.dataset
+
+    if (personId !== userId) {
+      followForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        axios({
+          method: 'post',
+          url: `/accounts/${personId}/follow/`,
+          headers: {'X-CSRFToken': csrftoken},
+        })
+          .then(response => {
+            const {isFollowed, followings, followers} = response.data
+            const followBtn = document.querySelector('#followBtn')
+            const followIcon = document.querySelector('#followIcon')
+            const followCnt = document.querySelector('#follow-cnt')
+
+            if (isFollowed) {
+              followBtn.className = 'btn btn-secondary'
+              followIcon.className = 'fas fa-users-slash'
+            } else {
+              followBtn.className = 'btn btn-primary'
+              followIcon.className = 'fas fa-user-friends'   
+            }     
+            followCnt.innerText = `팔로잉 : ${followings} / 팔로워 : ${followers}`
+          })     
+      })  
+    }
+
+  </script>
+{% endblock %}
