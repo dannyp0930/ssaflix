@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>detail</h1>
+  <hr>
+  <h2>{{ movie.title }}</h2>
+  <p>장르: {% for genre in movie.genres.all %}{{genre.name}} {% endfor %}</p>
+  <p>개봉 일자 : {{ movie.release_date }}</p>
+  <p>평점 : {{ movie.vote_average }}</p>
+  <p>인기도 : {{ movie.popularity }}</p>
+  <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img">
+  <p>{{ movie.overview }}</p>
+{% endblock content %}

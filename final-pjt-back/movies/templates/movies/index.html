@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <h1>Movies</h1>
+  <hr>
+  <div class="movie-list row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+    {% for movie in movies %}
+      <div class="movie col">
+        <div class="card m-auto" style="width: 18rem;">
+          <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img">
+          <div class="card-body">
+            <a class="text-decoration-none text-dark" href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</a>
+          </div>
+          <hr>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% comment %} <script>
+    let pageNum = 1
+    let flag = false
+    document.addEventListener('scroll', event => {
+      if (!flag){
+        const {scrollHeight, scrollTop, clientHeight} = document.documentElement
+        if (scrollHeight - Math.round(scrollTop) <= 1.2 * clientHeight) {
+          flag = true
+          pageNum += 1
+          axios({
+            method: 'get',
+            url: `/movies/?page=${pageNum}`,
+            headers: {'x-requested-with': 'XMLHttpRequest'}
+          })
+            .then(response => {
+              const movies = response.data.movies
+              movies.forEach(movie => {
+                const movieList = document.querySelector('.movie-list')
+                const movieDiv = document.createElement('div')
+
+                const movieHtml = 
+                  <a href="/movies/${movie.id}/" class="text-decoration-none link-dark"><h4>${movie.title}</h4></a>
+                  <p>평점: ${movie.vote_average}</p>
+                  <hr>
+                
+                movieDiv.innerHTML = movieHtml
+                movieList.appendChild(movieDiv)
+                flag = response.data.isLast
+              })
+            })
+        }
+      }
+    })
+  </script> {% endcomment %}
+{% endblock content%}
