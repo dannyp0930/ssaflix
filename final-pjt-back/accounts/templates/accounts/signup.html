@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
+{% load socialaccount %}
 {% block content %}
 {% comment %} <div class="wrapper" style="text-align: center;">
   <h1>회원가입</h1>
@@ -20,5 +22,7 @@
     <br>
 	<input type="submit" class="btn btn-primary" value="Sign Up"> 
 	</form> 
+  <br>
+  <a href="{% provider_login_url 'google' next="/" %}" class="btn btn-dark text-white"><img style="width: 20px; height: 20px;" src="{% static 'images/google_logo.png' %}" alt="googleimg"> 구글 로그인</a>
 </div> 
 {% endblock  %}
