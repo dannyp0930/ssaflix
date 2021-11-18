@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Genre(models.Model):
@@ -20,4 +21,14 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+
+RANK = [(1, '★'), (2, '★★'), (3, '★★★'), (4, '★★★★'), (5, '★★★★★')]
+
+
+class Rank(models.Model):
+    rank = models.IntegerField(choices=RANK)
+    content = models.CharField(max_length=50)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     

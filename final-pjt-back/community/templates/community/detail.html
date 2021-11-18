@@ -21,7 +21,7 @@
     <div class="container justify-content-end bg-secondary">
       <div class="row align-items-center">
         <p class="col text-start text-aling-center my-auto">{{ review.movie }}</p>
-        <i class="fas fa-star col text-end" style="color: yellow"> {{ review.rank }}</i>
+        <p class="col text-end my-auto" style="color: yellow">{{ review.get_rank_display }} </p>
       </div>
     </div>
     <div style="margin: 1rem;">
@@ -46,8 +46,8 @@
       {% else %}
         <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
       {% endif %}
+      </div>
     </div>
-  </div>
 
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value

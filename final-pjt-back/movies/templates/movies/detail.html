@@ -10,4 +10,22 @@
   <p>인기도 : {{ movie.popularity }}</p>
   <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img">
   <p>{{ movie.overview }}</p>
+
+  <div class="container">
+    <div class="row">
+      <p class="my-auto bg-secondary">한줄 평 {{ ranks|length }}</p>
+    </div >
+      {% for rank in ranks %}
+        <div class="row">
+          <p class="m-auto">{{ rank.user }} - {{ rank.content }}</p>
+        </div>
+      {% endfor %}
+    <hr>
+    <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
+      {% csrf_token %}
+      {{ rank_form }}
+      <input type="submit">
+    </form>
+    </div>
+  </div>
 {% endblock content %}
