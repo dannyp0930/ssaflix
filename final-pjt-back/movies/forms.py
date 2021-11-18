@@ -6,4 +6,4 @@ class RankForm(forms.ModelForm):
     
     class Meta:
         model = Rank
-        fields = ['content',]
+        fields = ['rank', 'content']
