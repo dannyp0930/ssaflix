@@ -104,6 +104,23 @@ def delete_comment(request, review_pk, comment_pk):
     return redirect('community:detail', review_pk)
 
 
+@login_required
+@require_http_methods(['GET', 'POST'])
+def update_comment(request, review_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    comment_form = CommentForm(instance=comment)
+    if request.user == comment.user:
+        if request.method == 'POST':
+            update_comment_form = CommentForm(request.POST, instance=comment)
+            if update_comment_form.is_valid():
+                update_comment_form.save()
+                return redirect('community:detail', review_pk)
+    context = {
+        'comment_form': comment_form,
+    }
+    return render(request, 'community/update_comment.html', context)
+    pass
+
 @require_POST
 def like(request, review_pk):
     if request.user.is_authenticated:
