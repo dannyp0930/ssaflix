@@ -19,14 +19,6 @@
           <th scope="row">{{ review.pk }}</th>
           <td><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a></td>
           <td><a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></td>
-          {% comment %} <form id="like-form" data-review-id="{{review.pk}}">
-            {% csrf_token %}
-            {% if user in review.like_users.all %}
-              <button class="btn btn-secondary"><i class="fas fa-thumbs-up"></i></button>
-            {% else %}
-              <button class="btn btn-primary"><i class="fas fa-thumbs-up"></i></button>
-            {% endif %}
-          </form> {% endcomment %}
           <td>{{ review.created_at | date:'y.m.d' }}</td>
           <td id="like-cnt">{{ review.like_users.all|length }}</td>
         </tr>
@@ -35,28 +27,5 @@
   </table>
   
   <script>
-    {% comment %} const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
-    const likeForm = document.querySelector('#like-form')
-
-    likeForm.addEventListener('submit', event => {
-      const reviewId = event.target.dataset.reviewId
-      event.preventDefault()
-      axios({
-        method: 'post',
-        url: `/community/${reviewId}/like/`,
-        headers: {'X-CSRFToken': csrftoken},
-      })
-      .then(response => {
-        const {isLiked, likes} = response.data
-        const likeBtn = document.querySelector("#like-form > button")
-        const likeCnt = document.querySelector("#like-cnt")
-        if (isLiked) {
-          likeBtn.className = "btn btn-secondary"
-        } else {
-          likeBtn.className = "btn btn-primary"
-        }
-        likeCnt.innerText = `${likes} 명이 이 글을 좋아합니다.`
-      })
-    }) {% endcomment %}
   </script>
 {% endblock %}

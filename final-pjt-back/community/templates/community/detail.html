@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
   <h2>{{ review.title }}</h2>
@@ -27,20 +28,45 @@
     <div style="margin: 1rem;">
       {{ review.content }}
     </div>
+    {% if user == review.user %}
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-3">
+            <a class="btn btn-primary w-100" href="{% url 'community:update' review.pk %}">UPDATE</a>
+          </div>
+          <div class="col-3">
+            <form action="{% url 'community:delete' review.pk %}" method="POST">
+              {% csrf_token %}
+              <input class="btn btn-danger w-100"type="submit" value="DELETE">
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endif %}
     <div class="container">
       <div class="row">
         <p class="my-auto bg-secondary">댓글 {{ comments|length }}</p>
       </div >
+        {% comment %} 표로 만들기 {% endcomment %}
         {% for comment in comments %}
           <div class="row">
-            <p class="m-auto">{{ comment.user }} - {{ comment.content }}</p>
+            <p class="col">{{ comment.user }}</p>
+            <p class="col">{{ comment.content }}</p>
+            <p class="col">{{ comment.created_at | date:'Y.m.d H:i' }}</p>
+            <p class="col">{{ comment.updated_at | date:'Y.m.d H:i' }}</p>
           </div>
+          {% if user == comment.user %}
+            <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
+              {% csrf_token %}
+              <input type="submit" value="DELETE">
+            </form>
+          {% endif %}
         {% endfor %}
       <hr>
       {% if request.user.is_authenticated %}
         <form action="{% url 'community:create_comment' review.pk %}" method="POST">
           {% csrf_token %}
-          {{ comment_form }}
+          {% bootstrap_form comment_form %}
           <input type="submit">
         </form>
       {% else %}

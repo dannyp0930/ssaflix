@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
   <h1>Detail</h1>
@@ -18,12 +19,16 @@
       {% for rank in ranks %}
         <div class="row">
           <p class="m-auto">{{ rank.user }} - {{ rank.content }}</p>
+          <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="delete">
+          </form>
         </div>
       {% endfor %}
     <hr>
     <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
       {% csrf_token %}
-      {{ rank_form }}
+      {% bootstrap_form rank_form %}
       <input type="submit">
     </form>
     </div>
