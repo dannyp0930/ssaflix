@@ -16,7 +16,7 @@
             <button class="btn btn-link text-secondary"><i class="fas fa-heart"></i></button>
           {% endif %}
         </form>
-        <p id="like-cnt" class="col-1 m-auto">{{ review.like_users.all|length }}</p>
+        <p id="like-cnt" class="col-1 m-auto">{{ review.like_users.all | length }}</p>
       </div>
     </div>
     <div class="container justify-content-end bg-secondary">
@@ -37,7 +37,7 @@
           <div class="col-3">
             <form action="{% url 'community:delete' review.pk %}" method="POST">
               {% csrf_token %}
-              <input class="btn btn-danger w-100"type="submit" value="DELETE">
+              <input class="btn btn-danger w-100 px-auto"type="submit" value="DELETE">
             </form>
           </div>
         </div>
@@ -50,21 +50,28 @@
         {% comment %} 표로 만들기 {% endcomment %}
         {% for comment in comments %}
           <div class="row">
-            <p class="col">{{ comment.user }}</p>
-            <p class="col">{{ comment.content }}</p>
-            <p class="col">{{ comment.created_at | date:'Y.m.d H:i' }}</p>
-            <p class="col">{{ comment.updated_at | date:'Y.m.d H:i' }}</p>
+            <a href="{% url 'accounts:profile' review.user.username %}"class="col-2 my-auto">{{ comment.user }}</a>
+            {% if user == comment.user %}
+              <div class="col-4 my-auto">
+                <a href="{% url 'community:update_comment' review.pk comment.pk %}" >{{ comment.content }}</a>
+              </div>
+              <div class="col-2">
+                <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <input class="btn btn-link w-100" type="submit" value="DELETE">
+                </form>
+              </div>
+            {% else %}
+              <p class="col-6 my-auto">{{ comment.content }}</p>
+            {% endif %}
+              <p class="col-2 my-auto">{{ comment.created_at | date:'y.m.d' }}</p>
+              <p class="col-2 my-auto">{{ comment.updated_at | date:'y.m.d' }}</p>
+            
           </div>
-          {% if user == comment.user %}
-            <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
-              {% csrf_token %}
-              <input type="submit" value="DELETE">
-            </form>
-          {% endif %}
         {% endfor %}
       <hr>
       {% if request.user.is_authenticated %}
-        <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+        <form action="{% url 'community:create_comment' review.pk%}" method="POST">
           {% csrf_token %}
           {% bootstrap_form comment_form %}
           <input type="submit">
