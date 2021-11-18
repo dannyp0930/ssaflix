@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>detail</h1>
+  <h1>Detail</h1>
   <hr>
   <h2>{{ movie.title }}</h2>
   <p>장르: {% for genre in movie.genres.all %}{{genre.name}} {% endfor %}</p>

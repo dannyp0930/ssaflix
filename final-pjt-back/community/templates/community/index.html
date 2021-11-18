@@ -3,26 +3,39 @@
 {% block content %}
   <h1>Community</h1>
   <hr>
-  {% for review in reviews %}
-    <p>작성자 : <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></p>
-    <p>글 번호: {{ review.pk }}</p>
-    <p>글 제목: {{ review.title }}</p>
-    <p>글 내용: {{ review.content }}</p>
-    <form id="like-form" data-review-id="{{review.pk}}">
-      {% csrf_token %}
-      {% if user in review.like_users.all %}
-        <button class="btn btn-secondary"><i class="fas fa-thumbs-up"></i></button>
-      {% else %}
-        <button class="btn btn-primary"><i class="fas fa-thumbs-up"></i></button>
-      {% endif %}
-    </form>
-    <p id="like-cnt">{{ review.like_users.all|length }} 명이 이 글을 좋아합니다.</p>
-    <a href="{% url 'community:detail' review.pk %}">[detail]</a>
-    <hr>
-  {% endfor %}
-
+  <table class="table">
+    <thead>
+      <tr class="text-center">
+        <th scope="col">번호</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성자</th>
+        <th scope="col">날짜</th>
+        <th scope="col">좋아요</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for review in reviews %}
+        <tr class="text-center">
+          <th scope="row">{{ review.pk }}</th>
+          <td><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a></td>
+          <td><a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></td>
+          {% comment %} <form id="like-form" data-review-id="{{review.pk}}">
+            {% csrf_token %}
+            {% if user in review.like_users.all %}
+              <button class="btn btn-secondary"><i class="fas fa-thumbs-up"></i></button>
+            {% else %}
+              <button class="btn btn-primary"><i class="fas fa-thumbs-up"></i></button>
+            {% endif %}
+          </form> {% endcomment %}
+          <td>{{ review.created_at | date:'y.m.d' }}</td>
+          <td id="like-cnt">{{ review.like_users.all|length }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
   <script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    {% comment %} const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
     const likeForm = document.querySelector('#like-form')
 
     likeForm.addEventListener('submit', event => {
@@ -44,6 +57,6 @@
         }
         likeCnt.innerText = `${likes} 명이 이 글을 좋아합니다.`
       })
-    })
+    }) {% endcomment %}
   </script>
 {% endblock %}

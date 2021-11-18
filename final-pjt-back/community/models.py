@@ -1,11 +1,11 @@
 from django.db import models
 from django.conf import settings
-
+from movies.models import Movie
 
 class Review(models.Model):
     title = models.CharField(max_length=100)
-    movie_title = models.CharField(max_length=50)
-    rank = models.IntegerField()
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    rank = models.IntegerField(choices=zip(range(1, 6), range(1, 6)))
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

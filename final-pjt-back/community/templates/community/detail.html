@@ -1,36 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2 class="text-center">DETAIL</h2>
-  <h3>{{ review.pk }} 번째 글</h3>
-  <hr>
-  <p>제목: {{ review.title }}</p>
-  <p>영화 제목: {{ review.movie_title }}</p>
-  <p>내용: {{ review.content }}</p>
-  <p>평점: {{ review.rank }}</p>
-  <p>작성 시각: {{ review.created_at }}</p>
-  <p>수정 시각: {{ review.updated_at }}</p>
-  <hr>
-  <h4>댓글 목록</h4>
-  {% if comments|length %}
-    <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
-  {% endif %}
-  {% for comment in comments %}
-    <div>
-      {{ comment.user }} - {{ comment.content }}
+  <h2>{{ review.title }}</h2>
+  <div class="card" style="margin-bottom: 2rem">
+    <div class="container justify-content-end">
+      <div class="row align-items-center">
+        <p class="col-6 my-auto">{{ review.user }} </p>
+        <p class="col my-auto text-end">{{ review.created_at | date:'Y.m.d H:i'}}</p>
+        <form id="like-form" class="col-1" data-review-id="{{review.pk}}">
+          {% csrf_token %}
+          {% if user in review.like_users.all %}
+            <button class="btn btn-link text-danger"><i class="fas fa-heart"></i></button>
+          {% else %}
+            <button class="btn btn-link text-secondary"><i class="fas fa-heart"></i></button>
+          {% endif %}
+        </form>
+        <p id="like-cnt" class="col-1 m-auto">{{ review.like_users.all|length }}</p>
+      </div>
     </div>
-  {% empty %}
-    <p><b>댓글이 없어요..</b></p>
-  {% endfor %}
-  <hr>
-  {% if request.user.is_authenticated %}
-    <form action="{% url 'community:create_comment' review.pk %}" method="POST">
-      {% csrf_token %}
-      {{ comment_form }}
-      <input type="submit">
-    </form>
-  {% else %}
-    <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
-  {% endif %}
-  <a href="{% url 'community:index' %}">[back]</a>
+    <div class="container justify-content-end bg-secondary">
+      <div class="row align-items-center">
+        <p class="col text-start text-aling-center my-auto">{{ review.movie }}</p>
+        <i class="fas fa-star col text-end" style="color: yellow"> {{ review.rank }}</i>
+      </div>
+    </div>
+    <div style="margin: 1rem;">
+      {{ review.content }}
+    </div>
+    <div class="container">
+      <div class="row">
+        <p class="my-auto bg-secondary">댓글 {{ comments|length }}</p>
+      </div >
+        {% for comment in comments %}
+          <div class="row">
+            <p class="m-auto">{{ comment.user }} - {{ comment.content }}</p>
+          </div>
+        {% endfor %}
+      <hr>
+      {% if request.user.is_authenticated %}
+        <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+          {% csrf_token %}
+          {{ comment_form }}
+          <input type="submit">
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    const likeForm = document.querySelector('#like-form')
+
+    likeForm.addEventListener('submit', event => {
+      const reviewId = event.target.dataset.reviewId
+      event.preventDefault()
+      axios({
+        method: 'post',
+        url: `/community/${reviewId}/like/`,
+        headers: {'X-CSRFToken': csrftoken},
+      })
+      .then(response => {
+        const {isLiked, likes} = response.data
+        const likeBtn = document.querySelector("#like-form > button")
+        const likeCnt = document.querySelector("#like-cnt")
+        if (isLiked) {
+          likeBtn.className = "btn btn-link text-danger"
+        } else {
+          likeBtn.className = "btn btn-link text-secondary"
+        }
+        likeCnt.innerText = `${likes}`
+      })
+    })
+  </script>
 {% endblock  %}
