@@ -1,9 +1,8 @@
 from types import coroutine
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
-from .models import Movie, Rank
+from .models import Movie, Rank, SelectGenre
 from .forms import RankForm, SelectGenreForm
-from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 
 # Create your views here.
 def index(request):
@@ -62,7 +61,13 @@ def recommended(request):
             genre = genre_form.save(commit=False)
             genre.user = request.user
             genre.save()
-            return redirect('movies:recomovie')
+            
+            movies = Movie.objects.prefetch_related('genres').filter(genres__in=[genre.selected_genre]).order_by('-vote_average').distinct()[:3]
+            print(movies)
+            context = {
+                'movies': movies,
+            }
+            return render(request, 'movies/recommended.html', context)
     else:
         genre_form = SelectGenreForm()
     context = {
@@ -70,7 +75,5 @@ def recommended(request):
     }
     return render(request, 'movies/recommend.html', context)
 
-def recomovie(request):
-    pass
+
     
-        
