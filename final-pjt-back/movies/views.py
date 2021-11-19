@@ -1,7 +1,9 @@
+from types import coroutine
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from .models import Movie, Rank
-from .forms import RankForm
+from .forms import RankForm, SelectGenreForm
+from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 
 # Create your views here.
 def index(request):
@@ -49,5 +51,24 @@ def delete_rank(request, movie_pk, rank_pk):
             rank.delete()
     return redirect('movies:detail', movie_pk)
 
+
+
 def recommended(request):
+    if request.user.is_authenticated:
+        genre_form = SelectGenreForm(request.POST)
+        if genre_form.is_valid():
+            genre = genre_form.save(commit=False)
+            genre.user = request.user
+            genre.save()
+            return redirect('movies:recomovie')
+    else:
+        genre_form = SelectGenreForm()
+    context = {
+        'genre_form': genre_form,
+    }
+    return render(request, 'movies/recommend.html', context)
+
+def recomovie(request):
     pass
+    
+        

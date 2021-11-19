@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
-</html>
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1>선호 장르 선택</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form genre_form %} 
+    {% comment %} {% bootstrap_form genre_form %} 
+    {% bootstrap_form genre_form %}  {% endcomment %}
+    <input type="submit" value='추천 영화 목록 보기'>
+  </form>
+
+{% endblock content%}
