@@ -14,11 +14,13 @@ def index(request):
 def detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     ranks = movie.rank_set.all()
+    user_rank = ranks.filter(user_id=request.user, movie_id=movie_pk)
     rank_form = RankForm()
     context = {
         'movie': movie,
         'ranks': ranks,
         'rank_form': rank_form,
+        'user_rank': user_rank,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -50,4 +52,4 @@ def delete_rank(request, movie_pk, rank_pk):
     return redirect('movies:detail', movie_pk)
 
 def recommended(request):
-    pass
+    return render(request, 'movies/recommended.html')

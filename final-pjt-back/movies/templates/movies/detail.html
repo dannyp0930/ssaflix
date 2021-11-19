@@ -18,21 +18,28 @@
     </div >
       {% for rank in ranks %}
         <div class="row">
-          <p class="m-auto">{{ rank.user }} - {{ rank.content }}</p>
-          <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="delete">
-          </form>
+          <p class="m-auto col">{{ rank.user }} - {{ rank.content }}</p>
+          <p class="col">{{ rank.get_rank_display }}</p>
+          {% if request.user == rank.user %}
+            <div class="col">
+              <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="delete">
+              </form>
+            </div>
+          {% endif %}
         </div>
       {% endfor %}
     <hr>
-    {% comment %} {% if request.user in ranks.user %} {% endcomment %}
-    <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
-      {% csrf_token %}
-      {% bootstrap_form rank_form %}
-      <input type="submit">
-    </form>
-    {% comment %} {% endif %} {% endcomment %}
+    {% if user_rank %}
+      <p>평점을 등록하셨습니다.</p>
+    {% else %}
+      <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form rank_form %}
+        <input type="submit">
+      </form>
+    {% endif %}
     </div>
   </div>
 {% endblock content %}
