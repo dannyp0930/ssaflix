@@ -30,7 +30,7 @@
     </div>
   {% endwith %}
   <h2>게시글</h2>
-  {% for reveiw in person.review_set.all %}
+  {% for review in person.review_set.all %}
     <div>
       <a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a>
       <i class="fas fa-heart" style="color:red"></i>
