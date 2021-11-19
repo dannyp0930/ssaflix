@@ -6,7 +6,7 @@ from .forms import RankForm, SelectGenreForm
 
 # Create your views here.
 def index(request):
-    movies = Movie.objects.order_by('-vote_average')
+    movies = Movie.objects.order_by('-popularity')
     context = {
         'movies': movies,
     }

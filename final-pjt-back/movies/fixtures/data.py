@@ -18,7 +18,7 @@ for genre in genres:
     }
     data_lsit.append(genre_dict)
 
-for page in range(1, 6):
+for page in range(1, 11):
     MOIVE_URL = f'{BASE_URL}/movie/popular?api_key={API_KEY}&language=ko-KR&page={page}'
 
     movie_data = requests.get(MOIVE_URL).json()
