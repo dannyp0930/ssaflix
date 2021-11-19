@@ -18,9 +18,32 @@
             {% endif %}
           </form>
         </div>
+      {% else %}
+        <div>
+          <form action="{% url 'accounts:delete' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="회원탈퇴">
+          </form>
+          <a href="{% url 'accounts:update' %}">회원수정</a>
+        </div>
       {% endif %}
     </div>
   {% endwith %}
+  <h2>게시글</h2>
+  {% for reveiw in person.review_set.all %}
+    <div>
+      <a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a>
+      <i class="fas fa-heart" style="color:red"></i>
+      {{ reviw.like_users.all | length}}
+    </div>
+  {% endfor %}
+  <h2>댓글</h2>
+  {% for comment in person.comment_set.all %}
+    <div>
+      <a href="{% url 'community:detail' comment.review.pk %}">작성 글: {{ comment.review.title }}</a>
+      <p>내 댓글: {{ comment.content }}</p>
+    </div>
+  {% endfor %}
 
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
