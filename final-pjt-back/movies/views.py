@@ -26,8 +26,6 @@ def detail(request, movie_pk):
 @require_POST
 def create_rank(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    if Rank.objects.get(user_id=request.user.pk, movie_id=movie_pk):
-        return redirect('movies:detail', movie.pk)
     rank_form = RankForm(request.POST)
     if rank_form.is_valid():
         rank = rank_form.save(commit=False)
