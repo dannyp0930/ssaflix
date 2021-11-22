@@ -9,7 +9,4 @@ urlpatterns = [
     path('<int:movie_pk>/rank/create/', views.create_rank, name='create_rank'),
     path('<int:movie_pk>/rank/<int:rank_pk>/delete/', views.delete_rank, name='delete_rank'),
     path('recommended/', views.recommended, name='recommended'),
-    path('test/', views.test, name='test'),
-    # path('select/', views.select_genre, name='select_genre'),
-    # path('recomovie/', views.recommended, name='recomovie'),
 ]
