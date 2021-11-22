@@ -6,6 +6,7 @@ from .forms import ReviewForm, CommentForm
 from django.http import JsonResponse
 
 
+@login_required
 @require_GET
 def index(request):
     reviews = Review.objects.select_related('user').prefetch_related('like_users').order_by('-pk')
@@ -15,6 +16,7 @@ def index(request):
     return render(request, 'community/index.html', context)
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def create(request):
     if request.method == 'POST':
@@ -32,6 +34,7 @@ def create(request):
     return render(request, 'community/create.html', context)
 
 
+@login_required
 @require_GET
 def detail(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
@@ -77,6 +80,7 @@ def update(request, review_pk):
     return render(request, 'community/update.html', context)
 
 
+@login_required
 @require_POST
 def create_comment(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
@@ -119,7 +123,7 @@ def update_comment(request, review_pk, comment_pk):
         'comment_form': comment_form,
     }
     return render(request, 'community/update_comment.html', context)
-    pass
+
 
 @require_POST
 def like(request, review_pk):

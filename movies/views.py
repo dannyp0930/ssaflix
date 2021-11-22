@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Movie, Rank
 from .forms import RankForm
 
+
 @require_safe
 def index(request):
     movies = Movie.objects.order_by('-popularity')
