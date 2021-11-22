@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
@@ -7,9 +8,13 @@ from .forms import RankForm
 
 @require_safe
 def index(request):
-    movies = Movie.objects.order_by('-popularity')
+    movies_popular = Movie.objects.order_by('-popularity')[:8]
+    movies_release = Movie.objects.order_by('-release_date')[:8]
+    movies_random = Movie.objects.order_by('?')[:8]
     context = {
-        'movies': movies,
+        'movies_popular': movies_popular,
+        'movies_release': movies_release,
+        'movies_random': movies_random,
     }
     return render(request, 'movies/index.html', context)
 
@@ -70,10 +75,12 @@ def pearson(s1, s2):
 @login_required
 @require_safe
 def recommended(request):
-    if Rank.objects.all():
+    if Rank.objects.filter(user_id=request.user.id) and Rank.objects.filter(~Q(user_id=request.user.id)):
+
         # 유저의 평점 데이터 불러오기
         ranks = pd.DataFrame(data=Rank.objects.all().values('user', 'movie', 'rank'))
         ranks = ranks.rename(columns={'user':"userId", 'movie':"movieId"})
+
         # 영화 데이터에서 id값 가져오기
         movie = pd.DataFrame(data=Movie.objects.all().values('id'))
         movie = movie.rename(columns={'id':'movieId'})

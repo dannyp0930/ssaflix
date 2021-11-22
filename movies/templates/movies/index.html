@@ -1,22 +1,52 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-  <h1>Movies</h1>
+  <h1>인기 영화</h1>
   <hr>
   <div class="movie-list row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
-    {% for movie in movies %}
+    {% for movie_popular in movies_popular %}
       <div class="movie col">
-          <div class="card w-100 h-100" style="width: 18rem;">
-            <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img" class="card-img-top">
-            <div class="card-body">
-              <a class="text-decoration-none text-dark" href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</a>
-            </div>
+        <div class="card">
+          <div class="card-body">
+            <a class="text-decoration-none text-dark" href="{% url 'movies:detail' movie_popular.pk %}">
+              <img src="https://image.tmdb.org/t/p/w500{{movie_popular.poster_path}}" alt="poster_img" class="card-img-top">
+            </a>
           </div>
+        </div>
       </div>
     {% endfor %}
-  </div>
-
+  </div><hr>
+  <h1>최근 개봉작</h1>
+  <hr>
+  <div class="movie-list row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+    {% for movie_release in movies_release %}
+      <div class="movie col">
+        <div class="card">
+          <div class="card-body">
+            <a class="text-decoration-none text-dark" href="{% url 'movies:detail' movie_release.pk %}">
+              <img src="https://image.tmdb.org/t/p/w500{{movie_release.poster_path}}" alt="poster_img" class="card-img-top">
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div><hr>
+  <h1>랜덤 추천</h1>
+  <hr>
+  <div class="movie-list row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+    {% for movie_random in movies_random %}
+      <div class="movie col">
+        <div class="card">
+          <div class="card-body">
+            <a class="text-decoration-none text-dark" href="{% url 'movies:detail' movie_random.pk %}">
+              <img src="https://image.tmdb.org/t/p/w500{{movie_random.poster_path}}" alt="poster_img" class="card-img-top">
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div><hr>
+  
   {% comment %} <script>
     let pageNum = 1
     let flag = false
