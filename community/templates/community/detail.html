@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
-  <h2>{{ review.title }}</h2>
+  <h2 class="my-3 ">게시물: {{ review.title }}</h2>
   <div class="card" style="margin-bottom: 2rem">
     <div class="container justify-content-end">
       <div class="row align-items-center">
@@ -43,6 +43,7 @@
         </div>
       </div>
     {% endif %}
+    <br>
     <div class="container">
       <div class="row">
         <p class="my-auto bg-secondary">댓글 {{ comments|length }}</p>
@@ -74,8 +75,11 @@
         <form action="{% url 'community:create_comment' review.pk%}" method="POST">
           {% csrf_token %}
           {% bootstrap_form comment_form %}
-          <input type="submit">
+          <br>
+          <input class="btn btn-dark" type="submit" value="댓글 작성">
+          <br>
         </form>
+        <br>
       {% else %}
         <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
       {% endif %}
