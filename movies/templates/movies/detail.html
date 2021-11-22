@@ -2,44 +2,66 @@
 {% load bootstrap4 %}
 
 {% block content %}
-  <h1>Detail</h1>
-  <hr>
-  <h2>{{ movie.title }}</h2>
-  <p>장르: {% for genre in movie.genres.all %}{{genre.name}} {% endfor %}</p>
-  <p>개봉 일자 : {{ movie.release_date }}</p>
-  <p>평점 : {{ movie.vote_average }}</p>
-  <p>인기도 : {{ movie.popularity }}</p>
-  <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img">
-  <p>{{ movie.overview }}</p>
-
-  <div class="container">
+  <div id="movieCard" class="container">
     <div class="row">
-      <p class="my-auto bg-secondary">한줄 평 {{ ranks|length }}</p>
-    </div >
-      {% for rank in ranks %}
-        <div class="row">
-          <p class="m-auto col">{{ rank.user }} - {{ rank.content }}</p>
-          <p class="col">{{ rank.get_rank_display }}</p>
-          {% if request.user == rank.user %}
-            <div class="col">
-              <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="delete">
-              </form>
-            </div>
-          {% endif %}
-        </div>
-      {% endfor %}
-    <hr>
-    {% if user_rank %}
-      <p>평점을 등록하셨습니다.</p>
-    {% else %}
+      <section class="col-6">
+        <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img" class="img-fluid">
+      </section>
+      <section class="col-6 container">
+        <h1>{{ movie.title }}</h1>
+        <p>
+          {{ movie.release_date | date:'Y/m/d' }}
+          /
+          {% for genre in movie.genres.all %}
+            {{genre.name}}
+          {% endfor %}
+        </p>
+        <p>회원 점수 : {{ movie.vote_average }} / 인기도 : {{ movie.popularity }}</p>
+        <h2>개요</h2>
+        <p>{{ movie.overview }}</p>
+      </section>
+    </div>
+  </div>
+  <div class="container">
+    <p class="my-auto bg-secondary">한줄 평 {{ ranks|length }}</p>
+    <table class="table">
+      <tbody>
+        {% for rank in ranks %}
+          <tr>
+            <th>{{ rank.user }}</th>
+            <td>{{ rank.content }}</td>
+            <td>{{ rank.get_rank_display }}</td>
+            {% if request.user == rank.user %}
+              <td>
+                <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
+                  {% csrf_token %}
+                  <input type="submit" value="delete">
+                </form>
+              </td>
+            {% else %}
+              <td></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if not user_rank %}
       <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
         {% csrf_token %}
         {% bootstrap_form rank_form %}
         <input type="submit">
       </form>
     {% endif %}
-    </div>
   </div>
+  <style>
+    #movieCard {
+      border: solid;
+      border-radius: 1rem;
+      background-color: black;
+      color: white;
+      padding: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+  </style>
 {% endblock content %}

@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Recommend</h1>
+  <h1>추천영화</h1>
   <hr>
   <div class="movie-list row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
     {% for recommend in recommends %}
       <div class="movie col">
-          <div class="card w-100 h-100" style="width: 18rem;">
-            <img src="https://image.tmdb.org/t/p/w500{{recommend.poster_path}}" alt="poster_img" class="card-img-top">
-            <div class="card-body">
-              <a class="text-decoration-none text-dark" href="{% url 'movies:detail' recommend.pk %}">{{ recommend.title }}</a>
-            </div>
+        <div class="card">
+          <div class="card-body">
+            <a class="text-decoration-none text-dark" href="{% url 'movies:detail' recommend.pk %}">
+              <img src="https://image.tmdb.org/t/p/w500{{recommend.poster_path}}" alt="poster_img" class="card-img-top">
+            </a>
           </div>
+        </div>
       </div>
     {% endfor %}
   </div>
+  
 {% endblock content %}
