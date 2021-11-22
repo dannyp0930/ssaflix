@@ -9,25 +9,27 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://kit.fontawesome.com/249a90cc04.js" crossorigin="anonymous"></script>
 </head>
-<body>
-  <div class="container">
-    <nav class="navbar" style="background-color: #20c997;">
+    <nav class="navbar" style="background-color: #696969;">
       {% if user.is_authenticated %}
-      <h3 class="text-primary">Hello, {{ user.username }}</h3>
+      <h3 class="mx-3 text-white">Hello, {{ user.username }}</h3>
       <a class="text-decoration-none text-white" href="{% url 'accounts:profile' user %}">내 프로필<a>
       <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Movie</a>
       <a class="text-decoration-none text-white" href="{% url 'community:index'%}">Community</a>
       <a class="text-decoration-none text-white" href="{% url 'community:create'%}">New Review</a>
       <a class="text-decoration-none text-white" href="{% url 'movies:recommended' %}">Recommended Movies</a>
-      <form action="{% url 'accounts:logout' %}" method="POST">
+      <form class="mx-3" action="{% url 'accounts:logout' %}" method="POST">
         {% csrf_token %}
-        <input type="submit" value="Logout">
+        <input class="btn btn-dark" type="submit" value="Logout">
       </form>
       {% else %}
       <a class="text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
       <a class="text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
       {% endif %}
     </nav>
+
+<body style="background-color: #a9a9a9;">
+  <div class="container">
+    
     {% block content %}
     {% endblock content %}
   </div>
