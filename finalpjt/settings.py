@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'community',
     'movies',
     'bootstrap4',
+    'django_seed',
 
     'django_seed',
     'allauth',

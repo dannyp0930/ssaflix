@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Movie, Rank
 from .forms import RankForm
 
-
 @require_safe
 def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:8]
@@ -64,6 +63,7 @@ def delete_rank(request, movie_pk, rank_pk):
 
 import pandas as pd
 import numpy as np
+from django.db.models import Q
 
 # 유저간 유사도 구하기 : 피어슨 상관계수
 def pearson(s1, s2):
@@ -75,6 +75,7 @@ def pearson(s1, s2):
 @login_required
 @require_safe
 def recommended(request):
+
     if Rank.objects.filter(user_id=request.user.id) and Rank.objects.filter(~Q(user_id=request.user.id)):
 
         # 유저의 평점 데이터 불러오기
