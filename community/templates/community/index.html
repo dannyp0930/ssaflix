@@ -1,35 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<<<<<<< HEAD
-  <h1 class="fw-bold">Community</h1>
-  <hr>
-  <table class="table">
-    <thead>
-      <tr class="text-center">
-        <th scope="col">번호</th>
-        <th scope="col">제목</th>
-        <th scope="col">작성자</th>
-        <th scope="col">날짜</th>
-        <th scope="col">좋아요</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for review in reviews %}
-        <tr >
-          <th scope="row">{{ review.pk }}</th>
-          <td><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a></td>
-          <td><a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></td>
-          <td>{{ review.created_at | date:'y.m.d' }}</td>
-          <td id="like-cnt">{{ review.like_users.all|length }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  
-  <script>
-  </script>
-=======
   <h1 class="fw-bold">Reviews</h1>
   <div class="container border bg-white" style="border-radius: 2rem;">
     <div class="row fs-3 fw-bold p-1">
@@ -42,11 +13,10 @@
     {% for review in reviews %}
       <div class="row fs-4 border-top p-1">
         <div class="col-2">{{ review.pk }}</div>
-        <div class="col-4"><a href="{% url 'community:detail' review.pk %}" class="text-dark fw-bold">{{ review.title }}</a></div>
-        <div class="col-2"><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark fw-bold">{{ review.user }}</a></div>
+        <div class="col-4"><a href="{% url 'community:detail' review.pk %}" class="text-dark text-decoration-none fw-bold">{{ review.title }}</a></div>
+        <div class="col-2"><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">{{ review.user }}</a></div>
         <div class="col-2">{{ review.created_at | date:'y.m.d' }}</div>
         <div class="col-2">{{ review.like_users.all|length }}</div>
       </div>
     {% endfor %}
->>>>>>> 36ef01f10f3b0f9c485d7da0a6001414e783d7bc
 {% endblock %}
