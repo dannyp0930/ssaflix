@@ -8,11 +8,11 @@
         <div class="container">
           <h1 class="mt-3 fw-bold ">랜덤 결과</h1>
             <div class="row m-auto justify-content-center">
-              {% for random in movies_random %}
+              {% for movie in movies %}
                 <div class="col-3 p-1">
                   <div class="card h-100">
-                    <a class="h-100" href="{% url 'movies:detail' random.pk %}">
-                      <img src="https://image.tmdb.org/t/p/w500{{random.poster_path}}" alt="poster_img" class="card-img-top h-100">
+                    <a class="h-100" href="{% url 'movies:detail' movie.pk %}">
+                      <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="poster_img" class="card-img-top h-100">
                     </a>
                   </div>
                 </div>

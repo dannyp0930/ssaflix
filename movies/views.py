@@ -140,11 +140,12 @@ def recommended(request):
 # 검색 기능
 def search(request):
     q = request.POST.get('q', "") 
-    movies_random = Movie.objects.order_by('?')[:4]
+
     if q:
         movies = Movie.objects.all().filter(title__icontains=q)
+    else:
+        movies = Movie.objects.order_by('?')[:4]
     context = {
         'movies' : movies,
-        'movies_random': movies_random,
     }
     return render(request, 'movies/search.html', context)
