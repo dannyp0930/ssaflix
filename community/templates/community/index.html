@@ -3,19 +3,23 @@
 {% block content %}
   <h1 class="fw-bold">Reviews</h1>
   <div class="container border bg-white" style="border-radius: 2rem;">
-    <div class="row fs-3 fw-bold p-1">
+    <div class="row fs-5 fw-bold p-1">
       <div class="col-2">번호</div>
       <div class="col-4">제목</div>
       <div class="col-2">작성자</div>
-      <div class="col-2">날짜</div>
+      <div class="col-2">작성시간</div>
       <div class="col-2">좋아요</div>
     </div>
     {% for review in reviews %}
-      <div class="row fs-4 border-top p-1">
+      <div class="row fs-5 border-top p-1">
         <div class="col-2">{{ review.pk }}</div>
         <div class="col-4"><a href="{% url 'community:detail' review.pk %}" class="text-dark text-decoration-none fw-bold">{{ review.title }}</a></div>
         <div class="col-2"><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">{{ review.user }}</a></div>
-        <div class="col-2">{{ review.created_at | date:'y.m.d' }}</div>
+        {% if review.created_string %}
+          <div class="col-2">{{ review.created_string }}</div>
+        {% else %}
+          <div class="col-2">{{ review.created_at | date:'y.m.d' }}</div>
+        {% endif %}
         <div class="col-2">{{ review.like_users.all|length }}</div>
       </div>
     {% endfor %}

@@ -4,13 +4,13 @@ from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
 from .models import Movie, Rank, Movie
 from .forms import RankForm
-import datetime
+from datetime import datetime
 
 @require_safe
 def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:12]
-    movies_release = Movie.objects.filter(release_date__lte=datetime.datetime.now()).order_by('-release_date')[:12]
-    movies_comeout = Movie.objects.filter(release_date__gt=datetime.datetime.now()).order_by('-release_date')
+    movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:12]
+    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('-release_date')
     movies_random = Movie.objects.order_by('?')[:12]
 
     context = {
@@ -139,18 +139,12 @@ def recommended(request):
 
 # 검색 기능
 def search(request):
-    movies = Movie.objects.all()
     q = request.POST.get('q', "") 
-
-    movies_random2 = Movie.objects.order_by('?')[:4]
-
+    movies_random = Movie.objects.order_by('?')[:4]
     if q:
-        movies = movies.filter(title__icontains=q)
-        context = {
-            'movies' : movies,
-            'q' : q,
-            'movies_random2': movies_random2,
-        }
-        return render(request, 'movies/search.html', context)
-    
-    return render(request, 'movies/search.html', {'movies_random2': movies_random2})
+        movies = Movie.objects.all().filter(title__icontains=q)
+    context = {
+        'movies' : movies,
+        'movies_random': movies_random,
+    }
+    return render(request, 'movies/search.html', context)

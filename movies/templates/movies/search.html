@@ -9,7 +9,7 @@
         <div class="container">
           <h1 class="fw-bold ">랜덤 결과</h1> <br>
             <div class="row m-auto justify-content-center">
-              {% for random in movies_random2 %}
+              {% for random in movies_random %}
                 <div class="col-3 p-1">
                   <div class="card h-100">
                     <a class="h-100" href="{% url 'movies:detail' random.pk %}">

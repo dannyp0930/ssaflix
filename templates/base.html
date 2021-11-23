@@ -58,7 +58,7 @@
           </ul>
         </div>
       </div>
-      <form  action="{% url 'movies:search' %}" method="post">
+      <form action="{% url 'movies:search' %}" method="post">
         {% csrf_token %}
           <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="q" value="{{q}}">
           <button class="btn btn-secondary " type="submit">Search</button>
@@ -89,7 +89,6 @@
 
 <body style="background-color: #a9a9a9;">
   <div class="container">
-    
     {% block content %}
     {% endblock content %}
   </div>

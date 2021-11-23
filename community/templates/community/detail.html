@@ -2,11 +2,11 @@
 {% load bootstrap4 %}
 
 {% block content %}
-  <div class="container border-0 bg-white mb-5" style="border-radius: 2rem;">
-    <div class="row my-3 fs-1 mx-1">{{ review.title }}</div>
+  <div class="container border-0 bg-white mb-3" style="border-radius: 2rem;">
+    <div class="row my-3 fs-1 fw-bold p-3">{{ review.title }}</div>
     <div class="row bg-light px-1">
       <div class="col my-auto">
-        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark fw-bold">
+        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">
           {{ review.user }}
         </a>
       </div>
@@ -24,7 +24,7 @@
       </div>
       <div id="like-cnt" class="col-1 my-auto">{{ review.like_users.all | length }}</div>
     </div>
-    <div class="row mx-2 my-5" style="width:100%; height: 18rem;">{{ review.content }}</div>
+    <div class="row mx-2 my-5" style="width:100%">{{ review.content }}</div>
     {% if user == review.user %}
       <div class="row justify-content-between my-3">
         <div class="col-2">
@@ -51,12 +51,12 @@
     </div>
     {% for comment in comments %}
       <div class="row px-2">
-        <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark my-auto fw-bold">{{ comment.user }}</a>
+        <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark text-decoration-none fw-bold my-auto">{{ comment.user }}</a>
         {% if user == comment.user %}
           <div class="col-4 my-3">
-            <a href="{% url 'community:update_comment' review.pk comment.pk %}" class="text-dark fw-bold">{{ comment.content }}</a>
+            <a href="{% url 'community:update_comment' review.pk comment.pk %}" class="text-dark text-decoration-none fw-bold">{{ comment.content }}</a>
           </div>
-          <div class="col-2">
+          <div class="col-2 m-auto">
             <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
               {% csrf_token %}
               <input class="btn btn-link w-100 text-decoration-none text-danger" type="submit" value="삭제">
@@ -65,26 +65,27 @@
         {% else %}
           <div class="col-6 my-3">{{ comment.content }}</div>
         {% endif %}
+        {% if comment.created_string %}
+          <div class="col-2 my-auto text-center">{{ comment.created_string }}</div>
+        {% else %}
           <div class="col-2 my-auto text-center">{{ comment.created_at | date:'y.m.d' }}</div>
+        {% endif %}
+        {% if comment.updated_string %}
+          <div class="col-2 my-auto text-center">{{ comment.updated_string }}</div>
+        {% else %}
           <div class="col-2 my-auto text-center">{{ comment.updated_at | date:'y.m.d' }}</div>
+        {% endif %}
       </div>
     {% endfor %}
     <hr>
-    {% if request.user.is_authenticated %}
-    <div class="row m-5">
-      <form action="{% url 'community:create_comment' review.pk%}" method="POST">
+    <div class="row p-5">
+      <form action="{% url 'community:create_comment' review.pk%}" method="POST" class="m-1">
         {% csrf_token %}
         {% bootstrap_form comment_form %}
-        <input class="btn btn-dark" type="submit" value="댓글 작성">
+        <input class="btn btn-dark my-3" type="submit" value="댓글 작성">
       </form>
     </div>
-    {% else %}
-    <div class="row">
-      <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
-    </div>
-    {% endif %}
   </div>
-
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
     const likeForm = document.querySelector('#like-form')

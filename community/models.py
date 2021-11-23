@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
-from movies.models import Movie
-
+from datetime import datetime, timedelta
 
 
 class Review(models.Model):
@@ -14,6 +13,20 @@ class Review(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def created_string(self):
+        time = datetime.now() - self.created_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(int(time.seconds / 60)) + '분 전'
+        elif time < timedelta(days=1):
+            return str(int(time.seconds / 3600)) + '시간 전'
+        elif time < timedelta(days=7):
+            time = datetime.now().date() - self.created_at.date()
+            return str(time.days) + '일 전'
+        else:
+            return False
 
 
 class Comment(models.Model):
@@ -25,3 +38,30 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+    def created_string(self):
+        time = datetime.now() - self.created_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(time.seconds // 60) + '분 전'
+        elif time < timedelta(days=1):
+            return str(time.seconds // 3600) + '시간 전'
+        elif time < timedelta(days=7):
+            return str(time.seconds // 86400) + '일 전'
+        else:
+            return False
+    
+    def updated_string(self):
+        time = datetime.now() - self.updated_at
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(int(time.seconds / 60)) + '분 전'
+        elif time < timedelta(days=1):
+            return str(int(time.seconds / 3600)) + '시간 전'
+        elif time < timedelta(days=7):
+            time = datetime.now().date() - self.updated_at.date()
+            return str(time.days) + '일 전'
+        else:
+            return False
