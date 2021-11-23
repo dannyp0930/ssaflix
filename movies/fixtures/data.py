@@ -18,12 +18,14 @@ for genre in genres:
     }
     data_lsit.append(genre_dict)
 
-for page in range(1, 11):
+for page in range(1, 501):
     MOIVE_URL = f'{BASE_URL}/movie/popular?api_key={API_KEY}&language=ko-KR&page={page}'
 
     movie_data = requests.get(MOIVE_URL).json()
     movies = movie_data.get('results')
     for movie in movies:
+        if not movie.get("release_date") or not movie.get("poster_path"):
+            continue
         movie_dict = {
             "model" : "movies.Movie",
             "pk" : movie.get("id"),

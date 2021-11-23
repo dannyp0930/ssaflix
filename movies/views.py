@@ -10,7 +10,7 @@ from datetime import datetime
 def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:12]
     movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:12]
-    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('-release_date')
+    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('release_date')[:12]
     movies_random = Movie.objects.order_by('?')[:12]
 
     context = {
