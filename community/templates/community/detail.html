@@ -6,7 +6,7 @@
     <div class="row my-3 fs-1 mx-1">{{ review.title }}</div>
     <div class="row bg-light px-1">
       <div class="col my-auto">
-        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark">
+        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark fw-bold">
           {{ review.user }}
         </a>
       </div>
@@ -51,15 +51,15 @@
     </div>
     {% for comment in comments %}
       <div class="row px-2">
-        <a href="{% url 'accounts:profile' comment.user.username %}"class="col-2 text-dark my-auto">{{ comment.user }}</a>
+        <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark my-auto fw-bold">{{ comment.user }}</a>
         {% if user == comment.user %}
           <div class="col-4 my-3">
-            <a class="text-dark" href="{% url 'community:update_comment' review.pk comment.pk %}" >{{ comment.content }}</a>
+            <a href="{% url 'community:update_comment' review.pk comment.pk %}" class="text-dark fw-bold">{{ comment.content }}</a>
           </div>
           <div class="col-2">
             <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
               {% csrf_token %}
-              <input class="btn btn-link w-100 text-decoration-none text-danger" type="submit" value="DELETE">
+              <input class="btn btn-link w-100 text-decoration-none text-danger" type="submit" value="삭제">
             </form>
           </div>
         {% else %}
