@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,12 +9,65 @@
   <title>Document</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://kit.fontawesome.com/249a90cc04.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-    <nav class="navbar" style="background-color: #696969;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center ">
+      {% if user.is_authenticated %}
+      <div class="container-fluid " >
+        <a class="navbar-brand" href="#">Hello, {{ user.username }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'movies:index'%}" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'movies:recommended' %}">Recommended Movies</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Community
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="{% url 'community:index'%}">Reviews</a></li>
+                <li><a class="dropdown-item" href="{% url 'community:create'%}">Create Review</a></li>
+                {% comment %} <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Account
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' user %}">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'community:create'%}">
+                  <form action="{% url 'accounts:logout' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="btn btn-dark" type="submit" value="Logout">
+                  </form>
+                </a></li>  
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% else %}
+        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
+        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
+      {% endif %}
+    </nav>
+    {% comment %} <nav class="navbar justify-content-around" style="background-color: #696969;">
       {% if user.is_authenticated %}
       <h3 class="mx-3 text-white">Hello, {{ user.username }}</h3>
-      <a class="text-decoration-none text-white" href="{% url 'accounts:profile' user %}">내 프로필<a>
-      <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Movie</a>
+      <a class="text-decoration-none text-white" href="{% url 'accounts:profile' user %}">Profile<a>
+      <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Home</a>
       <a class="text-decoration-none text-white" href="{% url 'community:index'%}">Community</a>
       <a class="text-decoration-none text-white" href="{% url 'community:create'%}">New Review</a>
       <a class="text-decoration-none text-white" href="{% url 'movies:recommended' %}">Recommended Movies</a>
@@ -22,10 +76,10 @@
         <input class="btn btn-dark" type="submit" value="Logout">
       </form>
       {% else %}
-      <a class="text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
-      <a class="text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
+        <a class="text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
+        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
       {% endif %}
-    </nav>
+    </nav> {% endcomment %}
 
 <body style="background-color: #a9a9a9;">
   <div class="container">

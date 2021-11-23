@@ -3,12 +3,10 @@ from django.conf import settings
 from movies.models import Movie
 
 
-RANK = [(1, '★'), (2, '★★'), (3, '★★★'), (4, '★★★★'), (5, '★★★★★')]
 
 class Review(models.Model):
     title = models.CharField(max_length=100)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    rank = models.IntegerField(choices=RANK)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

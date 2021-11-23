@@ -22,7 +22,6 @@
     <div class="container justify-content-end bg-secondary">
       <div class="row align-items-center">
         <p class="col text-start text-aling-center my-auto">{{ review.movie }}</p>
-        <p class="col text-end my-auto" style="color: yellow">{{ review.get_rank_display }} </p>
       </div>
     </div>
     <div style="margin: 1rem;">
@@ -85,7 +84,8 @@
       {% endif %}
       </div>
     </div>
-
+  </div>
+  
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
     const likeForm = document.querySelector('#like-form')
