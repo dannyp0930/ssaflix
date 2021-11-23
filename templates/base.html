@@ -67,11 +67,7 @@
       {% if user.is_authenticated %}
       <h3 class="mx-3 text-white">Hello, {{ user.username }}</h3>
       <a class="text-decoration-none text-white" href="{% url 'accounts:profile' user %}">Profile<a>
-<<<<<<< HEAD
       <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Home</a>
-=======
-      <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Movie</a>
->>>>>>> 02f4af4df05cd8543fb1761cb35659faddb0e4de
       <a class="text-decoration-none text-white" href="{% url 'community:index'%}">Community</a>
       <a class="text-decoration-none text-white" href="{% url 'community:create'%}">New Review</a>
       <a class="text-decoration-none text-white" href="{% url 'movies:recommended' %}">Recommended</a>
