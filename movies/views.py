@@ -4,15 +4,18 @@ from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
 from .models import Movie, Rank
 from .forms import RankForm
+import datetime
 
 @require_safe
 def index(request):
-    movies_popular = Movie.objects.order_by('-popularity')[:8]
-    movies_release = Movie.objects.order_by('-release_date')[:8]
-    movies_random = Movie.objects.order_by('?')[:8]
+    movies_popular = Movie.objects.order_by('-popularity')[:12]
+    movies_release = Movie.objects.filter(release_date__lte=datetime.datetime.now()).order_by('-release_date')[:12]
+    movies_comeout = Movie.objects.filter(release_date__gt=datetime.datetime.now()).order_by('-release_date')
+    movies_random = Movie.objects.order_by('?')[:12]
     context = {
         'movies_popular': movies_popular,
         'movies_release': movies_release,
+        'movies_comeout': movies_comeout,
         'movies_random': movies_random,
     }
     return render(request, 'movies/index.html', context)
