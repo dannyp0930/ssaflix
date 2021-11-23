@@ -1,31 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="fw-bold">Community</h1>
-  <hr>
-  <table class="table">
-    <thead>
-      <tr class="text-center">
-        <th scope="col">번호</th>
-        <th scope="col">제목</th>
-        <th scope="col">작성자</th>
-        <th scope="col">날짜</th>
-        <th scope="col">좋아요</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for review in reviews %}
-        <tr class="text-center">
-          <th scope="row">{{ review.pk }}</th>
-          <td><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</a></td>
-          <td><a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></td>
-          <td>{{ review.created_at | date:'y.m.d' }}</td>
-          <td id="like-cnt">{{ review.like_users.all|length }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  
-  <script>
-  </script>
+  <h1 class="fw-bold">Reviews</h1>
+  <div class="container border">
+    <div class="row fs-3 fw-bold">
+      <div class="col-2">번호</div>
+      <div class="col-4">제목</div>
+      <div class="col-2">작성자</div>
+      <div class="col-2">날짜</div>
+      <div class="col-2">좋아요</div>
+    </div>
+    {% for review in reviews %}
+      <div class="row fs-4 border-top">
+        <div class="col-2">{{ review.pk }}</div>
+        <div class="col-4"><a href="{% url 'community:detail' review.pk %}" class="text-dark fw-bold">{{ review.title }}</a></div>
+        <div class="col-2"><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark fw-bold">{{ review.user }}</a></div>
+        <div class="col-2">{{ review.created_at | date:'y.m.d' }}</div>
+        <div class="col-2">{{ review.like_users.all|length }}</div>
+      </div>
+    {% endfor %}
 {% endblock %}
