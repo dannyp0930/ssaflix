@@ -22,37 +22,37 @@
       </section>
     </div>
   </div>
-  <div class="container">
-    <p class="my-auto bg-secondary">한줄 평 {{ ranks|length }}</p>
-    <table class="table">
-      <tbody>
+  <div class="container border-0 bg-white mb-3 py-5" style="border-radius: 3rem;">
+    <div class="row bg-secondary p-2 fs-4 fw-bold">한 줄 평 {{ ranks|length }}</div>
+    {% if not user_rank %}
+      <div class="row mx-1 my-2">
+        <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
+          {% csrf_token %}
+          {% bootstrap_form rank_form %}
+          <br>
+          <input type="submit" class="btn btn-dark" value="등록">
+        </form>
+      </div>
+    {% endif %}
         {% for rank in ranks %}
-          <tr>
-            <th>{{ rank.user }}</th>
-            <td>{{ rank.content }}</td>
-            <td>{{ rank.get_rank_display }}</td>
+          <div class="row my-3">
+            <a href="{% url 'accounts:profile' rank.user %}" class="col-2 m-auto text-decoration-none text-dark fw-bold">{{ rank.user }}</a>
+            <div class="col-6 m-auto">{{ rank.content }}</div>
             {% if request.user == rank.user %}
-              <td>
+              <div class="col-2">
                 <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
                   {% csrf_token %}
                   <input type="submit" class="btn btn-danger" value="삭제">
                 </form>
-              </td>
+              </div>
             {% else %}
-              <td></td>
+              <div class="col-2"></div>
             {% endif %}
-          </tr>
+            <div class="col-2 m-auto text-warning">{{ rank.get_rank_display }}</div>
+          </div>
         {% endfor %}
       </tbody>
     </table>
-    {% if not user_rank %}
-      <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
-        {% csrf_token %}
-        {% bootstrap_form rank_form %}
-        <br>
-        <input type="submit" class="btn btn-primary" value="등록">
-      </form>
-    {% endif %}
   </div>
   <style>
     #movieCard {
