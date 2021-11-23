@@ -6,9 +6,15 @@
     <div class="row my-3 fs-1 fw-bold p-3">{{ review.title }}</div>
     <div class="row bg-light px-1">
       <div class="col my-auto">
-        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">
-          {{ review.user }}
-        </a>
+        {% if request.user == review.user %}
+          <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">
+            {{ review.user }} (나)
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark text-decoration-none fw-bold">
+            {{ review.user }}
+          </a>
+        {% endif %}
       </div>
       <div class="col my-auto">{{ review.movie }}</div>
       <div class="col my-auto text-end">{{ review.created_at | date:'Y.m.d H:i'}}</div>
@@ -38,20 +44,25 @@
         </div>
       </div>
     {% endif %}
-    <div class="row py-3 px-2 bg-light">
-      <div class="col">
-        댓글 {{ comments|length }}
-      </div>
-      <div class="col-2 text-center">
-        작성 시각
-      </div>
-      <div class="col-2 text-center">
-        수정 시각
-      </div>
+    <div class="row p-3 bg-light">
+      댓글 {{ comments|length }}
+    </div>
+    <div class="row p-3">
+      <form action="{% url 'community:create_comment' review.pk%}" method="POST" class="m-1">
+        {% csrf_token %}
+        {% bootstrap_form comment_form %}
+        <input class="btn btn-dark my-3" type="submit" value="작성">
+      </form>
     </div>
     {% for comment in comments %}
       <div class="row px-2">
-        <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark text-decoration-none fw-bold my-auto">{{ comment.user }}</a>
+        {% if request.user == comment.user %}
+          <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark text-decoration-none fw-bold my-auto">{{ comment.user }} (나)</a>
+        {% elif review.user == comment.user %}
+          <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark text-decoration-none fw-bold my-auto">{{ comment.user }} (글쓴이)</a>
+        {% else %}
+          <a href="{% url 'accounts:profile' comment.user.username %}" class="col-2 text-dark text-decoration-none fw-bold my-auto">{{ comment.user }}</a>
+        {% endif %}
         {% if user == comment.user %}
           <div class="col-4 my-3">
             <a href="{% url 'community:update_comment' review.pk comment.pk %}" class="text-dark text-decoration-none fw-bold">{{ comment.content }}</a>
@@ -78,13 +89,6 @@
       </div>
     {% endfor %}
     <hr>
-    <div class="row p-5">
-      <form action="{% url 'community:create_comment' review.pk%}" method="POST" class="m-1">
-        {% csrf_token %}
-        {% bootstrap_form comment_form %}
-        <input class="btn btn-dark my-3" type="submit" value="댓글 작성">
-      </form>
-    </div>
   </div>
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
