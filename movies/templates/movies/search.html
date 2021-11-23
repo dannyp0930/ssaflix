@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if not movies %}
+      <div class="align-items-center">
+        <h1 class="fw-bold text-center">검색 결과가 없습니다</h1>
+        <p class="fw-bold text-center">검색어를 입력하지 않는 경우 영화를 랜덤하게 보여드립니다.</p>
+        <div class="container">
+          <h1 class="fw-bold ">랜덤 결과</h1> <br>
+            <div class="row m-auto justify-content-center">
+              {% for random in movies_random2 %}
+                <div class="col-3 p-1">
+                  <div class="card h-100">
+                    <a class="h-100" href="{% url 'movies:detail' random.pk %}">
+                      <img src="https://image.tmdb.org/t/p/w500{{random.poster_path}}" alt="poster_img" class="card-img-top h-100">
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+        </div><hr>
+      </div>
+
+    {% else %}
+
+    <div class="container">
+      <h1 class="fw-bold ">검색 결과</h1> <br>
+        <div class="row m-auto justify-content-center">
+          {% for movies in movies.all %}
+            <div class="col-3 p-1">
+              <div class="card h-100">
+                <a class="h-100" href="{% url 'movies:detail' movies.pk %}">
+                  <img src="https://image.tmdb.org/t/p/w500{{movies.poster_path}}" alt="poster_img" class="card-img-top h-100">
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div><hr>
+
+    {% endif %}
+
+{% endblock content %}

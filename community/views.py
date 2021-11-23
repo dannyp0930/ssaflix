@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
-from .models import Review, Comment
+from .models import Review, Comment, Movie
 from .forms import ReviewForm, CommentForm
 from django.http import JsonResponse
 
@@ -143,3 +143,5 @@ def like(request, review_pk):
         }
         return JsonResponse(json)
     return redirect('accounts:login')
+
+

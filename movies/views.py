@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
-from .models import Movie, Rank
+from .models import Movie, Rank, Movie
 from .forms import RankForm
 import datetime
 
@@ -12,6 +12,7 @@ def index(request):
     movies_release = Movie.objects.filter(release_date__lte=datetime.datetime.now()).order_by('-release_date')[:12]
     movies_comeout = Movie.objects.filter(release_date__gt=datetime.datetime.now()).order_by('-release_date')
     movies_random = Movie.objects.order_by('?')[:12]
+
     context = {
         'movies_popular': movies_popular,
         'movies_release': movies_release,
@@ -135,3 +136,21 @@ def recommended(request):
         'recommends':recommends,
     }
     return render(request, 'movies/recommended.html', context)
+
+# 검색 기능
+def search(request):
+    movies = Movie.objects.all()
+    q = request.POST.get('q', "") 
+
+    movies_random2 = Movie.objects.order_by('?')[:4]
+
+    if q:
+        movies = movies.filter(title__icontains=q)
+        context = {
+            'movies' : movies,
+            'q' : q,
+            'movies_random2': movies_random2,
+        }
+        return render(request, 'movies/search.html', context)
+    
+    return render(request, 'movies/search.html', {'movies_random2': movies_random2})

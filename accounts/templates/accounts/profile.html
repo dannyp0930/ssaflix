@@ -16,51 +16,44 @@
       <div class="col-md-3">
         {% with followings=person.followings.all followers=person.followers.all %}
         <div id="is-same" data-person-id="{{ person.pk }}" data-user-id="{{ user.pk }}">
-          <div id="follow-cnt">
-            <h3>팔로워 <br> {{ followers|length }} </h3>
+          <h3 class="m-0">팔로워 </h3>
+          <div id="follower-cnt" style="font-size: 1.72rem">
+            <h3>{{ followers|length }}</h3>
           </div>
-        {% if request.user != person %}
-        <div>
-          <form id="follow-form">
-              {% csrf_token %}
-              {% if request.user in followers %}
-              <button id="followBtn" class="btn btn-secondary"><i id="followIcon" class="fas fa-users-slash"></i></button>
-              {% else %}
-                <button id="followBtn" class="btn btn-primary"><i id="followIcon" class="fas fa-user-friends"></i></button>
-              {% endif %}
-          </form>
-        </div>       
-        {% endif %}
         </div>
-         {% endwith %}
+        {% endwith %}
       </div>
       <div class="col-md-3">
         {% with followings=person.followings.all followers=person.followers.all %}
         <div id="is-same" data-person-id="{{ person.pk }}" data-user-id="{{ user.pk }}">
-         <div id="follow-cnt">
-            <h3> 팔로잉 <br> {{ followings|length }} </h3>
+         <div id="follow-cnt" style="font-size: 1.5rem">
+            <h3>팔로잉 <br> {{ followings|length }} </h3>
           </div>
-        {% if request.user != person %}
-        <div>
-          <form id="follow-form">
-              {% csrf_token %}
-              {% if request.user in followers %}
-              <button id="followBtn" class="btn btn-secondary"><i id="followIcon" class="fas fa-users-slash"></i></button>
-              {% else %}
-                <button id="followBtn" class="btn btn-primary"><i id="followIcon" class="fas fa-user-friends"></i></button>
-              {% endif %}
-          </form>
-        </div>       
-        {% endif %}
         </div>
-         {% endwith %}
+  <div>
+    {% if request.user != person %}
+      <div>
+        <form id="follow-form">
+            {% csrf_token %}
+            {% if request.user in followers %}
+              <button id="followBtn" class="btn btn-secondary btn-block"><i id="followIcon" class="fas fa-users-slash"></i></button>
+            {% else %}
+              <button id="followBtn" class="btn btn-primary btn-block"><i id="followIcon" class="fas fa-user-friends"></i></button>
+            {% endif %}
+        </form>
+      </div>       
+      {% endif %}
+  </div>
+        {% endwith %}
       </div>         
     </div>
     <hr>
   </div>
+  {% comment %} 팔로우 부분 {% endcomment %}
+
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <h2 class="mt-3">작성한 게시물</h2>
         {% for review in person.review_set.all %}
         <div>
@@ -70,7 +63,7 @@
         </div>
         {% endfor %}
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <h2 class="mt-3">작성한 댓글</h2>
         {% for comment in person.comment_set.all %}
         <div>
@@ -78,6 +71,18 @@
           <p>내 댓글: {{ comment.content }}</p>
         </div>
         {% endfor %}  
+      </div>
+      <div class="col-md-4">
+        <h2 class="mt-3">평가한 영화</h2>
+        {% if movies %}
+        {% for movie in movies.all %}
+        <div>
+          {{ movie.title}}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>평가한 영화가 없습니다.</p>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -115,16 +120,17 @@
             const {isFollowed, followings, followers} = response.data
             const followBtn = document.querySelector('#followBtn')
             const followIcon = document.querySelector('#followIcon')
-            const followCnt = document.querySelector('#follow-cnt')
+            const followerCnt = document.querySelector('#follower-cnt')
+            
 
             if (isFollowed) {
-              followBtn.className = 'btn btn-secondary'
+              followBtn.className = 'btn btn-secondary btn-block'
               followIcon.className = 'fas fa-users-slash'
             } else {
-              followBtn.className = 'btn btn-primary'
+              followBtn.className = 'btn btn-primary btn-block'
               followIcon.className = 'fas fa-user-friends'   
             }     
-            followCnt.innerText = `팔로잉 : ${followings} / 팔로워 : ${followers}`
+            followerCnt.innerText = `${followers}`
           })     
       })  
     }

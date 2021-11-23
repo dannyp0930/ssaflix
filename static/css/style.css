@@ -1,15 +1,4 @@
-img {
-  
-  object-fit: cover;
-}
 
-.card {
-  object-fit: cover;
-}
-
-.card-body {
-  object-fit: cover;
-}
 
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 html,body {font-family: nanumgothic !important;}

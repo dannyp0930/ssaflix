@@ -5,6 +5,7 @@ from django.contrib.auth import (
     login as auth_login,
     logout as auth_logout,
     get_user_model,
+    models,
     update_session_auth_hash
 )    
 from django.contrib.auth.forms import (
@@ -14,6 +15,7 @@ from django.contrib.auth.forms import (
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .forms import CustomUserChangeForm, CustomUserCreationForm
+from movies.models import Rank, Movie
 
 
 @require_http_methods(['GET', 'POST'])
@@ -103,6 +105,17 @@ def logout(request):
 @login_required
 def profile(request, username):
     person = get_object_or_404(get_user_model(), username=username)
+
+    movie_ids = Rank.objects.filter(user_id=request.user.id).values('movie_id')
+    id_list = [value['movie_id'] for value in movie_ids]
+    movies = Movie.objects.filter(id__in=id_list)
+
+    if movies:
+        context = {
+            'movies': movies,
+            'person': person,
+        }
+        return render(request, 'accounts/profile.html', context)
     context = {
         'person': person,
     }
@@ -128,3 +141,4 @@ def follow(request, user_pk):
             }
             return JsonResponse(json)
     return redirect('accounts:profile', person.username)
+
