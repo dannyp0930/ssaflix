@@ -126,12 +126,12 @@ def recommended(request):
         # 내가 보지 않은 영화 id 후보 결정
         id_list = [value['movie_id'] for value in sim_movie if value['movie_id'] not in movies]
         recommends = Movie.objects.filter(id__in=id_list)
-        # 사용자 기반 추천 영화가 없다면 인기도 순으로 4개
+        # 사용자 기반 추천 영화가 없다면 인기도 순으로 12개
         if not recommends:
-            recommends = Movie.objects.order_by('-popularity')[:4]
-    # 평점 정보가 없는 경우 인기도 순으로 4개
+            recommends = Movie.objects.order_by('-popularity')[:12]
+    # 평점 정보가 없는 경우 인기도 순으로 12개
     else:
-        recommends = Movie.objects.order_by('-popularity')[:4]
+        recommends = Movie.objects.order_by('-popularity')[:12]
     context = {
         'recommends':recommends,
     }
