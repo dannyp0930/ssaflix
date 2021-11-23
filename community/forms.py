@@ -6,7 +6,7 @@ class ReviewForm(forms.ModelForm):
     
     class Meta:
         model = Review
-        fields = ['title', 'movie', 'content']
+        fields = ['title', 'content']
 
 
 class CommentForm(forms.ModelForm):

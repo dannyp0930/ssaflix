@@ -2,13 +2,18 @@
 {% load bootstrap4 %}
 
 {% block content %}
-  <h2 class="my-3 ">게시물: {{ review.title }}</h2>
-  <div class="card" style="margin-bottom: 2rem">
-    <div class="container justify-content-end">
-      <div class="row align-items-center">
-        <p class="col-6 my-auto">{{ review.user }} </p>
-        <p class="col my-auto text-end">{{ review.created_at | date:'Y.m.d H:i'}}</p>
-        <form id="like-form" class="col-1" data-review-id="{{review.pk}}">
+  <div class="container border-0 bg-white mb-5" style="border-radius: 2rem;">
+    <div class="row my-3 fs-1 mx-1">{{ review.title }}</div>
+    <div class="row bg-light px-1">
+      <div class="col my-auto">
+        <a href="{% url 'accounts:profile' review.user.username %}" class="text-dark">
+          {{ review.user }}
+        </a>
+      </div>
+      <div class="col my-auto">{{ review.movie }}</div>
+      <div class="col my-auto text-end">{{ review.created_at | date:'Y.m.d H:i'}}</div>
+      <div class="col-1">
+        <form id="like-form" data-review-id="{{ review.pk }}">
           {% csrf_token %}
           {% if user in review.like_users.all %}
             <button class="btn btn-link text-danger"><i class="fas fa-heart"></i></button>
@@ -16,76 +21,70 @@
             <button class="btn btn-link text-secondary"><i class="fas fa-heart"></i></button>
           {% endif %}
         </form>
-        <p id="like-cnt" class="col-1 m-auto">{{ review.like_users.all | length }}</p>
       </div>
+      <div id="like-cnt" class="col-1 my-auto">{{ review.like_users.all | length }}</div>
     </div>
-    <div class="container justify-content-end bg-secondary">
-      <div class="row align-items-center">
-        <p class="col text-start text-aling-center my-auto">{{ review.movie }}</p>
-      </div>
-    </div>
-    <div style="margin: 1rem;">
-      {{ review.content }}
-    </div>
+    <div class="row mx-2 my-5" style="width:100%; height: 18rem;">{{ review.content }}</div>
     {% if user == review.user %}
-      <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-3">
-            <a class="btn btn-primary w-100" href="{% url 'community:update' review.pk %}">UPDATE</a>
-          </div>
-          <div class="col-3">
-            <form action="{% url 'community:delete' review.pk %}" method="POST">
-              {% csrf_token %}
-              <input class="btn btn-danger w-100 px-auto"type="submit" value="DELETE">
-            </form>
-          </div>
+      <div class="row justify-content-between my-3">
+        <div class="col-2">
+          <a class="btn btn-primary w-100" href="{% url 'community:update' review.pk %}">UPDATE</a>
+        </div>
+        <div class="col-2">
+          <form action="{% url 'community:delete' review.pk %}" method="POST">
+            {% csrf_token %}
+            <input class="btn btn-danger w-100 px-auto"type="submit" value="DELETE">
+          </form>
         </div>
       </div>
     {% endif %}
-    <br>
-    <div class="container">
-      <div class="row">
-        <p class="my-auto bg-secondary">댓글 {{ comments|length }}</p>
-      </div >
-        {% comment %} 표로 만들기 {% endcomment %}
-        {% for comment in comments %}
-          <div class="row">
-            <a href="{% url 'accounts:profile' review.user.username %}"class="col-2 my-auto">{{ comment.user }}</a>
-            {% if user == comment.user %}
-              <div class="col-4 my-auto">
-                <a href="{% url 'community:update_comment' review.pk comment.pk %}" >{{ comment.content }}</a>
-              </div>
-              <div class="col-2">
-                <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
-                  {% csrf_token %}
-                  <input class="btn btn-link w-100" type="submit" value="DELETE">
-                </form>
-              </div>
-            {% else %}
-              <p class="col-6 my-auto">{{ comment.content }}</p>
-            {% endif %}
-              <p class="col-2 my-auto">{{ comment.created_at | date:'y.m.d' }}</p>
-              <p class="col-2 my-auto">{{ comment.updated_at | date:'y.m.d' }}</p>
-            
-          </div>
-        {% endfor %}
-      <hr>
-      {% if request.user.is_authenticated %}
-        <form action="{% url 'community:create_comment' review.pk%}" method="POST">
-          {% csrf_token %}
-          {% bootstrap_form comment_form %}
-          <br>
-          <input class="btn btn-dark" type="submit" value="댓글 작성">
-          <br>
-        </form>
-        <br>
-      {% else %}
-        <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
-      {% endif %}
+    <div class="row py-3 px-2 bg-light">
+      <div class="col">
+        댓글 {{ comments|length }}
+      </div>
+      <div class="col-2 text-center">
+        작성 시각
+      </div>
+      <div class="col-2 text-center">
+        수정 시각
       </div>
     </div>
+    {% for comment in comments %}
+      <div class="row px-2">
+        <a href="{% url 'accounts:profile' comment.user.username %}"class="col-2 text-dark my-auto">{{ comment.user }}</a>
+        {% if user == comment.user %}
+          <div class="col-4 my-3">
+            <a class="text-dark" href="{% url 'community:update_comment' review.pk comment.pk %}" >{{ comment.content }}</a>
+          </div>
+          <div class="col-2">
+            <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
+              {% csrf_token %}
+              <input class="btn btn-link w-100 text-decoration-none text-danger" type="submit" value="DELETE">
+            </form>
+          </div>
+        {% else %}
+          <div class="col-6 my-3">{{ comment.content }}</div>
+        {% endif %}
+          <div class="col-2 my-auto text-center">{{ comment.created_at | date:'y.m.d' }}</div>
+          <div class="col-2 my-auto text-center">{{ comment.updated_at | date:'y.m.d' }}</div>
+      </div>
+    {% endfor %}
+    <hr>
+    {% if request.user.is_authenticated %}
+    <div class="row m-5">
+      <form action="{% url 'community:create_comment' review.pk%}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form comment_form %}
+        <input class="btn btn-dark" type="submit" value="댓글 작성">
+      </form>
+    </div>
+    {% else %}
+    <div class="row">
+      <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+    </div>
+    {% endif %}
   </div>
-  
+
   <script>
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
     const likeForm = document.querySelector('#like-form')
