@@ -40,16 +40,12 @@
               <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                 <li><a class="dropdown-item" href="{% url 'accounts:profile' user %}">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
-<<<<<<< HEAD
-                <li>
-                  <form class="dropdown-item" action="{% url 'accounts:logout' %}" method="POST">
-=======
-                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"> 
                   <form action="{% url 'accounts:logout' %}" method="POST">
->>>>>>> 98ffe9f6dedd236b606a3c2b0ad44dd8252bda35
                     {% csrf_token %}
                     <input class="btn btn-link text-decoration-none text-dark p-0" type="submit" value="Logout">
                   </form>
+                  </a>
                 </li>  
               </ul>
             </li>
@@ -61,7 +57,7 @@
           </form>
       </div>
       {% else %}
-        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Home</a>
+        <a class="mx-3 text-decoration-none text-white" href="{% url 'movies:index' %}">Home</a>
         <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
         <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
       {% endif %}
