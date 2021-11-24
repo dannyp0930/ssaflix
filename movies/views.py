@@ -6,6 +6,7 @@ from .models import Movie, Rank, Movie
 from .forms import RankForm
 from datetime import datetime
 
+import requests
 import pandas as pd
 import numpy as np
 from django.db.models import Q
@@ -81,7 +82,9 @@ def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:12]
     movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:12]
     movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('release_date')[:12]
-    movies_recommend = recommended(request)
+    movies_recommend = None
+    if request.user.is_authenticated:
+        movies_recommend = recommended(request)
     movies_random = Movie.objects.order_by('?')[:12]
 
     context = {
@@ -103,12 +106,23 @@ def detail(request, movie_pk):
     averatge_ranks = ranks.aggregate(Avg('rank'))['rank__avg']
     user_rank = ranks.filter(user_id=request.user, movie_id=movie_pk)
     rank_form = RankForm()
+
+    BASE_URL = 'https://api.themoviedb.org/3'
+    API_KEY = '06b0ce27243d1f04de9675dc822f928a'
+    VIDEOS_URL = f'{BASE_URL}/movie/{movie_pk}/videos?api_key={API_KEY}&language=ko-KR'
+    videos_data = requests.get(VIDEOS_URL).json()
+    video_path = None
+    videos = videos_data.get('results')
+    if videos:
+        video = videos[0]
+        video_path = video['key']
     context = {
         'movie': movie,
         'ranks': ranks,
         'rank_form': rank_form,
         'user_rank': user_rank,
         'averatge_ranks': averatge_ranks,
+        'video_path': video_path,
     }
     return render(request, 'movies/detail.html', context)
 

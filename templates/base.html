@@ -40,12 +40,12 @@
               <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                 <li><a class="dropdown-item" href="{% url 'accounts:profile' user %}">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{% url 'community:create'%}">
-                  <form action="{% url 'accounts:logout' %}" method="POST">
+                <li>
+                  <form class="dropdown-item" action="{% url 'accounts:logout' %}" method="POST">
                     {% csrf_token %}
                     <input class="btn btn-link text-decoration-none text-dark p-0" type="submit" value="Logout">
                   </form>
-                </a></li>  
+                </li>  
               </ul>
             </li>
           </ul>

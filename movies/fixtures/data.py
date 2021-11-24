@@ -20,7 +20,6 @@ for genre in genres:
 
 for page in range(1, 501):
     MOIVE_URL = f'{BASE_URL}/movie/popular?api_key={API_KEY}&language=ko-KR&page={page}'
-
     movie_data = requests.get(MOIVE_URL).json()
     movies = movie_data.get('results')
     for movie in movies:

@@ -5,7 +5,6 @@ from .models import Review, Comment
 from .forms import ReviewForm, CommentForm
 from django.http import JsonResponse
 
-
 @login_required
 @require_GET
 def index(request):
