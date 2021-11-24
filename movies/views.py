@@ -1,96 +1,23 @@
-from django.db.models import Q, Avg
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
 from .models import Movie, Rank, Movie
 from .forms import RankForm
-from datetime import datetime
-
-import pandas as pd
-import numpy as np
-from django.db.models import Q
-
-# 유저간 유사도 구하기 : 피어슨 상관계수
-def pearson(s1, s2):
-    s1_c = s1 - s1.mean()
-    s2_c = s2 - s2.mean()
-    return np.sum(s1_c * s2_c) / (np.sqrt(np.sum(s1_c ** 2) * np.sum(s2_c ** 2)))
-
-def recommended(request):
-
-    # 유저가 등록한 평점과 다른 유저가 등록한 평점이 존재한다면
-    if Rank.objects.filter(user_id=request.user) and Rank.objects.filter(~Q(user_id=request.user)):
-
-        # 유저의 평점 데이터 불러오기
-        ranks = pd.DataFrame(data=Rank.objects.all().values('user', 'movie', 'rank'))
-        ranks = ranks.rename(columns={'user':"userId", 'movie':"movieId"})
-
-        # 영화 데이터에서 id값 가져오기
-        movie = pd.DataFrame(data=Movie.objects.all().values('id'))
-        movie = movie.rename(columns={'id':'movieId'})
-
-        # 평가하지 않은 데이터는 NaN값으로
-        movie.movieId = pd.to_numeric(movie.movieId, errors='coerce')
-        ranks.movieId = pd.to_numeric(ranks.movieId, errors='coerce')
-
-        # 데이터 통합 후 피벗 테이블 생성
-        data = pd.merge(ranks, movie, on='movieId', how='inner')
-        matrix = data.pivot_table(index='movieId', columns='userId', values='rank')
-        result = []
-
-        # 다른 유저들과 유사도 검사
-        for side_id in matrix.columns:
-            
-            if side_id == request.user.id:
-                continue
-            
-            # 유저간 유사도 검사
-            cor = pearson(matrix[request.user.id], matrix[side_id])
-
-            # 평점이 NaN 값이면 0으로 입력
-            if np.isnan(cor):
-                result.append((side_id, 0))
-            else:
-                result.append((side_id, cor))
-
-        # 가장 유사한 유저 값 생성
-        result = max(result, key=lambda r: r[1])[0]
-
-        # 자신이 평가한 영화 id값
-        movies = Rank.objects.filter(user_id=request.user.id).values('movie_id')
-        movies = [value['movie_id'] for value in movies]
-
-        # 유사 유저가 평가한 영화 id값
-        sim_movie = Rank.objects.filter(user_id=result).values('movie_id')
-        
-        # 내가 보지 않은 영화 id 후보 결정
-        id_list = [value['movie_id'] for value in sim_movie if value['movie_id'] not in movies]
-        recommends = Movie.objects.filter(id__in=id_list)
-        recommends_count = recommends.count()
-
-        # 추천 영화가 충분하지 않으면
-        if recommends_count < 12:
-            return False
-
-        return recommends
-
-    return False
+import datetime
 
 @require_safe
 def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:12]
-    movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:12]
-    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('release_date')[:12]
-    movies_recommend = recommended(request)
+    movies_release = Movie.objects.filter(release_date__lte=datetime.datetime.now()).order_by('-release_date')[:12]
+    movies_comeout = Movie.objects.filter(release_date__gt=datetime.datetime.now()).order_by('release_date')[:12]
     movies_random = Movie.objects.order_by('?')[:12]
 
     context = {
         'movies_popular': movies_popular,
         'movies_release': movies_release,
         'movies_comeout': movies_comeout,
-        'movies_recommend': movies_recommend,
         'movies_random': movies_random,
-
     }
     return render(request, 'movies/index.html', context)
 
@@ -100,7 +27,6 @@ def index(request):
 def detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     ranks = movie.rank_set.all()
-    averatge_ranks = ranks.aggregate(Avg('rank'))['rank__avg']
     user_rank = ranks.filter(user_id=request.user, movie_id=movie_pk)
     rank_form = RankForm()
     context = {
@@ -108,7 +34,6 @@ def detail(request, movie_pk):
         'ranks': ranks,
         'rank_form': rank_form,
         'user_rank': user_rank,
-        'averatge_ranks': averatge_ranks,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -140,16 +65,91 @@ def delete_rank(request, movie_pk, rank_pk):
     return redirect('movies:detail', movie_pk)
 
 
+import pandas as pd
+import numpy as np
+from django.db.models import Q
+
+# 유저간 유사도 구하기 : 피어슨 상관계수
+def pearson(s1, s2):
+    s1_c = s1 - s1.mean()
+    s2_c = s2 - s2.mean()
+    return np.sum(s1_c * s2_c) / np.sqrt(np.sum(s1_c ** 2) * np.sum(s2_c ** 2))
+
+
+@login_required
+@require_safe
+def recommended(request):
+
+    if Rank.objects.filter(user_id=request.user.id) and Rank.objects.filter(~Q(user_id=request.user.id)):
+
+        # 유저의 평점 데이터 불러오기
+        ranks = pd.DataFrame(data=Rank.objects.all().values('user', 'movie', 'rank'))
+        ranks = ranks.rename(columns={'user':"userId", 'movie':"movieId"})
+
+        # 영화 데이터에서 id값 가져오기
+        movie = pd.DataFrame(data=Movie.objects.all().values('id'))
+        movie = movie.rename(columns={'id':'movieId'})
+
+        # 평가하지 않은 데이터는 NaN값으로
+        movie.movieId = pd.to_numeric(movie.movieId, errors='coerce')
+        ranks.movieId = pd.to_numeric(ranks.movieId, errors='coerce')
+
+        # 데이터 통합 후 피벗 테이블 생성
+        data = pd.merge(ranks, movie, on='movieId', how='inner')
+        matrix = data.pivot_table(index='movieId', columns='userId', values='rank')
+        result = []
+
+        for side_id in matrix.columns:
+            
+            if side_id == request.user.id:
+                continue
+            
+            # 유저간 유사도 검사
+            cor = pearson(matrix[request.user.id], matrix[side_id])
+
+            # 평점이 NaN 값이면 0으로 입력
+            if np.isnan(cor):
+                result.append((side_id, 0))
+            else:
+                result.append((side_id, cor))
+
+        # 가장 유사한 유저 값 생성
+        result = max(result, key=lambda r: -r[1])[0]
+
+        # 자신이 평가한 영화 id값
+        movies = Rank.objects.filter(user_id=request.user.id).values('movie_id')
+        movies = [value['movie_id'] for value in movies]
+
+        # 유사 유저가 평가한 영화 id값
+        sim_movie = Rank.objects.filter(user_id=result).values('movie_id')
+        
+        # 내가 보지 않은 영화 id 후보 결정
+        id_list = [value['movie_id'] for value in sim_movie if value['movie_id'] not in movies]
+        recommends = Movie.objects.filter(id__in=id_list)
+        # 사용자 기반 추천 영화가 없다면 인기도 순으로 4개
+        if not recommends:
+            recommends = Movie.objects.order_by('-popularity')[:4]
+    # 평점 정보가 없는 경우 인기도 순으로 4개
+    else:
+        recommends = Movie.objects.order_by('-popularity')[:4]
+    context = {
+        'recommends':recommends,
+    }
+    return render(request, 'movies/recommended.html', context)
 
 # 검색 기능
 def search(request):
+    movies = Movie.objects.all()
     q = request.POST.get('q', "") 
 
     if q:
-        movies = Movie.objects.all().filter(title__icontains=q)
-    else:
-        movies = Movie.objects.order_by('?')[:4]
-    context = {
-        'movies' : movies,
-    }
-    return render(request, 'movies/search.html', context)
+        movies = movies.filter(title__icontains=q)
+        context = {
+            'movies' : movies,
+            'q' : q,
+        }
+        return render(request, 'movies/search.html', context)
+    
+    return render(request, 'movies/search.html')
+    
+    
