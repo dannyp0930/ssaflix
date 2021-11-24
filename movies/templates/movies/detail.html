@@ -23,21 +23,25 @@
     </div>
   </div>
   <div class="container border-0 bg-white mb-3 py-5" style="border-radius: 3rem;">
-    <div class="row bg-secondary p-2 fs-4 fw-bold">한 줄 평 {{ ranks|length }}</div>
+    <div class="row bg-secondary p-2 fs-4 fw-bold">
+      한 줄 평 {{ ranks|length }}
+    </div>
     {% if not user_rank %}
-      <div class="row mx-1 my-2">
-        <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
-          {% csrf_token %}
-          {% bootstrap_form rank_form %}
-          <br>
-          <input type="submit" class="btn btn-dark" value="등록">
-        </form>
-      </div>
+    <div class="row mx-1 my-2">
+      <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form rank_form %}
+        <br>
+        <input type="submit" class="btn btn-dark" value="등록">
+      </form>
+    </div>
     {% endif %}
         {% for rank in ranks %}
           <div class="row my-3">
-            <a href="{% url 'accounts:profile' rank.user %}" class="col-2 m-auto text-decoration-none text-dark fw-bold">{{ rank.user }}</a>
-            <div class="col-6 m-auto">{{ rank.content }}</div>
+            <a href="{% url 'accounts:profile' rank.user %}" class="col-1 m-auto text-decoration-none text-dark fw-bold">{{ rank.user }}</a>
+            <div class="col-6 m-auto">
+              {{ rank.content }}
+            </div>
             {% if request.user == rank.user %}
               <div class="col-2">
                 <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
@@ -46,9 +50,12 @@
                 </form>
               </div>
             {% else %}
-              <div class="col-2"></div>
+              <div class="col-2">
+              </div>
             {% endif %}
-            <div class="col-2 m-auto text-warning">{{ rank.get_rank_display }}</div>
+            <div class="col-3 m-auto text-warning">
+              {{ rank.get_rank_display }}
+            </div>
           </div>
         {% endfor %}
       </tbody>

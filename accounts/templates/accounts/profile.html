@@ -8,7 +8,12 @@
   <div class="container">
     <div class="row">
       <div class="col-md-3">
-        <img style="width: 70px; height: 70px;" src="{% static 'images/user.png' %}" alt="googleimg">
+        {% if person.photo %}
+          <img style="border-radius: 50%" class="w-100 h-100" src="{{ person.photo.url }}" alt="profile img">
+        {% else %}
+          <img class="w-100 h-100" src="{% static 'images/default_user.png' %}" alt="googleimg">
+        {% endif %}
+        {% comment %} <img style="width: 70px; height: 70px;" src="{% static 'images/user.png' %}" alt="googleimg"> {% endcomment %}
       </div>  
       <div class="col-md-3 text-white">
         <h3>게시물 <br> {{ person.review_set.all|length}}</h3>
