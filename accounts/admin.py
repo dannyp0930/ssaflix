@@ -8,26 +8,12 @@ from django.contrib.auth.admin import UserAdmin
 
 @admin.register(models.User)
 class CustomUserAdmin(UserAdmin):
-    # fieldsets = UserAdmin.fieldsets +
     fieldsets = (
         ('User Profile', {
             "fields": (
                 'photo',
-                'photo_thumbnail'
             ),
         }),
     )
     
 admin.site.register(User, CustomUserAdmin)
-
-        # (
-        #     (
-        #         'User Profile',
-        #         {
-        #             'fields' : (
-        #                 'photo'
-        #             ),
-        #         },
-        #     ),
-        # )
-    

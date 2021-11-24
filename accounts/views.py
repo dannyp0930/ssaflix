@@ -96,7 +96,6 @@ def login(request):
     return render(request, 'accounts/login.html', context)
 
 
-@require_POST
 def logout(request):
     auth_logout(request)
     return redirect('community:index')
