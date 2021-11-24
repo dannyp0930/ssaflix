@@ -161,9 +161,11 @@ def search(request):
 
     if q:
         movies = Movie.objects.all().filter(title__icontains=q)
-    else:
-        movies = Movie.objects.order_by('?')[:4]
-    context = {
-        'movies' : movies,
-    }
-    return render(request, 'movies/search.html', context)
+
+        context = {
+            'movies' : movies,
+            'q' : q,
+        }
+        return render(request, 'movies/search.html', context)
+    
+    return render(request, 'movies/search.html')
