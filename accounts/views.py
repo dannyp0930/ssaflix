@@ -49,7 +49,7 @@ def delete(request):
 @require_http_methods(['GET', 'POST'])
 def update(request):
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, instance=request.user, files = request.FILES)
         if form.is_valid():
             form.save()
             return redirect('accounts:profile', request.user.username)
