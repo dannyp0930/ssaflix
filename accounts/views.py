@@ -105,7 +105,7 @@ def logout(request):
 def profile(request, username):
     person = get_object_or_404(get_user_model(), username=username)
 
-    movie_ids = Rank.objects.filter(user_id=request.user.id).values('movie_id')
+    movie_ids = Rank.objects.filter(user_id=person.id).values('movie_id')
     id_list = [value['movie_id'] for value in movie_ids]
     movies = Movie.objects.filter(id__in=id_list)
 
