@@ -7,15 +7,15 @@ from .forms import RankForm
 from datetime import datetime
 
 import requests
-import pandas as pd
-import numpy as np
+import pandas
+import numpy
 from django.db.models import Q
 
 # 유저간 유사도 구하기 : 피어슨 상관계수
 def pearson(s1, s2):
     s1_c = s1 - s1.mean()
     s2_c = s2 - s2.mean()
-    return np.sum(s1_c * s2_c) / (np.sqrt(np.sum(s1_c ** 2) * np.sum(s2_c ** 2)))
+    return numpy.sum(s1_c * s2_c) / (numpy.sqrt(numpy.sum(s1_c ** 2) * numpy.sum(s2_c ** 2)))
 
 def recommended(request):
 
@@ -23,19 +23,19 @@ def recommended(request):
     if Rank.objects.filter(user_id=request.user) and Rank.objects.filter(~Q(user_id=request.user)):
 
         # 유저의 평점 데이터 불러오기
-        ranks = pd.DataFrame(data=Rank.objects.all().values('user', 'movie', 'rank'))
+        ranks = pandas.DataFrame(data=Rank.objects.all().values('user', 'movie', 'rank'))
         ranks = ranks.rename(columns={'user':"userId", 'movie':"movieId"})
 
         # 영화 데이터에서 id값 가져오기
-        movie = pd.DataFrame(data=Movie.objects.all().values('id'))
+        movie = pandas.DataFrame(data=Movie.objects.all().values('id'))
         movie = movie.rename(columns={'id':'movieId'})
 
         # 평가하지 않은 데이터는 NaN값으로
-        movie.movieId = pd.to_numeric(movie.movieId, errors='coerce')
-        ranks.movieId = pd.to_numeric(ranks.movieId, errors='coerce')
+        movie.movieId = pandas.to_numeric(movie.movieId, errors='coerce')
+        ranks.movieId = pandas.to_numeric(ranks.movieId, errors='coerce')
 
         # 데이터 통합 후 피벗 테이블 생성
-        data = pd.merge(ranks, movie, on='movieId', how='inner')
+        data = pandas.merge(ranks, movie, on='movieId', how='inner')
         matrix = data.pivot_table(index='movieId', columns='userId', values='rank')
         result = []
 
@@ -49,7 +49,7 @@ def recommended(request):
             cor = pearson(matrix[request.user.id], matrix[side_id])
 
             # 평점이 NaN 값이면 0으로 입력
-            if np.isnan(cor):
+            if numpy.isnan(cor):
                 result.append((side_id, 0))
             else:
                 result.append((side_id, cor))
