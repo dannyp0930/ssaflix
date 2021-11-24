@@ -23,11 +23,16 @@
     </div>
   </div>
   <div class="container border-0 bg-white mb-3 py-5" style="border-radius: 3rem;">
-    <div class="row bg-secondary p-2 fs-4 fw-bold">
-      한 줄 평 {{ ranks|length }}
+    <div class="row bg-secondary justify-content-between p-2 fw-bold">
+      <div class="col text-start">
+        한 줄 평 {{ ranks|length }}
+      </div>
+      <div class="col text-end">
+        평점 {{ averatge_ranks }}
+      </div>
     </div>
     {% if not user_rank %}
-    <div class="row mx-1 my-2">
+    <div class="row mx-1 my-2" >
       <form action="{% url 'movies:create_rank' movie.pk %}" method="POST">
         {% csrf_token %}
         {% bootstrap_form rank_form %}
@@ -36,31 +41,35 @@
       </form>
     </div>
     {% endif %}
-        {% for rank in ranks %}
-          <div class="row my-3">
-            <a href="{% url 'accounts:profile' rank.user %}" class="col-1 m-auto text-decoration-none text-dark fw-bold">{{ rank.user }}</a>
-            <div class="col-6 m-auto">
+      {% for rank in ranks %}
+        <div class="row my-3 text-start align-items-center" style="font-size: 14px;">
+          <a
+            href="{% url 'accounts:profile' rank.user %}"
+            class="col-2 text-decoration-none text-dark fw-bold"
+          >
+            {{ rank.user }}
+          </a>
+          {% if request.user == rank.user %}
+            <div class="col-7">
               {{ rank.content }}
             </div>
-            {% if request.user == rank.user %}
-              <div class="col-2">
-                <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
-                  {% csrf_token %}
-                  <input type="submit" class="btn btn-danger" value="삭제">
-                </form>
-              </div>
-            {% else %}
-              <div class="col-2">
-              </div>
-            {% endif %}
-            <div class="col-3 m-auto text-warning">
-              {{ rank.get_rank_display }}
+            <div class="col-1">
+              <form action="{% url 'movies:delete_rank' movie.pk rank.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-link p-0 text-decoration-none text-danger" value="삭제">
+              </form>
             </div>
+          {% else %}
+            <div class="col-8">
+              {{ rank.content }}
+            </div>
+          {% endif %}
+          <div class="col-1 text-warning">
+            {{ rank.get_rank_display }}
           </div>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        </div><hr>
+      {% endfor %}
+    </div>
   <style>
     #movieCard {
       border: solid;

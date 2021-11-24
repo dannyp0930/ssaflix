@@ -5,7 +5,7 @@
   <h1 class="mt-3 fw-bold text-white">인기 영화</h1>
     <div class="row m-auto justify-content-center">
       {% for movie_popular in movies_popular %}
-        <div class="col-3 p-1">
+        <div class="col-12 col-md-6 col-lg-3 p-1">
           <div class="card h-100">
             <a class="h-100" href="{% url 'movies:detail' movie_popular.pk %}">
               <img src="https://image.tmdb.org/t/p/w500{{movie_popular.poster_path}}" alt="poster_img" class="card-img-top h-100">
@@ -19,7 +19,7 @@
   <h1 class="mt-3 fw-bold  text-white">최근 개봉작</h1>
     <div class="row m-auto justify-content-center">
       {% for movie_release in movies_release %}
-        <div class="col-3 p-1">
+        <div class="col-12 col-md-6 col-lg-3 p-1">
           <div class="card h-100">
             <a class="h-100" href="{% url 'movies:detail' movie_release.pk %}">
               <img src="https://image.tmdb.org/t/p/w500{{movie_release.poster_path}}" alt="poster_img" class="card-img-top h-100">
@@ -33,7 +33,7 @@
   <h1 class="mt-3 fw-bold  text-white">개봉 예정작</h1>
     <div class="row m-auto justify-content-center">
       {% for movie_comeout in movies_comeout %}
-        <div class="col-3 p-1">
+        <div class="col-12 col-md-6 col-lg-3 p-1">
           <div class="card h-100">
             <a class="h-100" href="{% url 'movies:detail' movie_comeout.pk %}">
               <img src="https://image.tmdb.org/t/p/w500{{movie_comeout.poster_path}}" alt="poster_img" class="card-img-top h-100">
@@ -48,7 +48,7 @@
     <h1 class="mt-3 fw-bold  text-white">영화 추천</h1>
       <div class="row m-auto justify-content-center">
         {% for movie_recommend in movies_recommend %}
-          <div class="col-3 p-1">
+          <div class="col-12 col-md-6 col-lg-3 p-1">
             <div class="card h-100">
               <a class="h-100" href="{% url 'movies:detail' movie_recommend.pk %}">
                 <img src="https://image.tmdb.org/t/p/w500{{movie_recommend.poster_path}}" alt="poster_img" class="card-img-top h-100">
@@ -63,7 +63,7 @@
     <h1 class="mt-3 fw-bold  text-white">랜덤 추천</h1>
       <div class="row m-auto justify-content-center">
         {% for movie_random in movies_random %}
-          <div class="col-3 p-1">
+          <div class="col-12 col-md-6 col-lg-3 p-1">
             <div class="card h-100">
               <a class="h-100" href="{% url 'movies:detail' movie_random.pk %}">
                 <img src="https://image.tmdb.org/t/p/w500{{movie_random.poster_path}}" alt="poster_img" class="card-img-top h-100">
@@ -74,40 +74,4 @@
       </div>
     </div>
   {% endif %}
-
-  
-  {% comment %} <script>
-    let pageNum = 1
-    let flag = false
-    document.addEventListener('scroll', event => {
-      if (!flag){
-        const {scrollHeight, scrollTop, clientHeight} = document.documentElement
-        if (scrollHeight - Math.round(scrollTop) <= 1.2 * clientHeight) {
-          flag = true
-          pageNum += 1
-          axios({
-            method: 'get',
-            url: `/movies/?page=${pageNum}`,
-            headers: {'x-requested-with': 'XMLHttpRequest'}
-          })
-            .then(response => {
-              const movies = response.data.movies
-              movies.forEach(movie => {
-                const movieList = document.querySelector('.movie-list')
-                const movieDiv = document.createElement('div')
-
-                const movieHtml = 
-                  <a href="/movies/${movie.id}/" class="text-decoration-none link-dark"><h4>${movie.title}</h4></a>
-                  <p>평점: ${movie.vote_average}</p>
-                  <hr>
-                
-                movieDiv.innerHTML = movieHtml
-                movieList.appendChild(movieDiv)
-                flag = response.data.isLast
-              })
-            })
-        }
-      }
-    })
-  </script> {% endcomment %}
 {% endblock content%}

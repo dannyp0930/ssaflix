@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_safe
 from django.contrib.auth.decorators import login_required
@@ -100,6 +100,7 @@ def index(request):
 def detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     ranks = movie.rank_set.all()
+    averatge_ranks = ranks.aggregate(Avg('rank'))['rank__avg']
     user_rank = ranks.filter(user_id=request.user, movie_id=movie_pk)
     rank_form = RankForm()
     context = {
@@ -107,6 +108,7 @@ def detail(request, movie_pk):
         'ranks': ranks,
         'rank_form': rank_form,
         'user_rank': user_rank,
+        'averatge_ranks': averatge_ranks,
     }
     return render(request, 'movies/detail.html', context)
 

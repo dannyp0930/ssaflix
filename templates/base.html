@@ -9,8 +9,6 @@
   <title>SSAFLIX</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://kit.fontawesome.com/249a90cc04.js" crossorigin="anonymous"></script>
-  {% comment %} <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> {% endcomment %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="shortcut icon" href="{% static 'images/favicon3.ico' %}">
 </head>
@@ -18,8 +16,6 @@
       {% if user.is_authenticated %}
       <div class="container-fluid" >
         <a href="{% url 'movies:index'%}"><img class="h-10 w-10" src="{% static 'images/SSAFLIX.png' %}" alt="logo"></a>
-        {% comment %} <img class="h-10 w-10" src="{% static 'images/SSAFLIX.png' %}" alt="logo"> {% endcomment %}
-        {% comment %} <a class="navbar-brand" href="#">Hello, {{ user.username }}</a> {% endcomment %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,8 +31,6 @@
               <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                 <li><a class="dropdown-item" href="{% url 'community:index'%}">Reviews</a></li>
                 <li><a class="dropdown-item" href="{% url 'community:create'%}">Create Review</a></li>
-                {% comment %} <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -49,7 +43,7 @@
                 <li><a class="dropdown-item" href="{% url 'community:create'%}">
                   <form action="{% url 'accounts:logout' %}" method="POST">
                     {% csrf_token %}
-                    <input class="btn btn-dark" type="submit" value="Logout">
+                    <input class="btn btn-link text-decoration-none text-dark p-0" type="submit" value="Logout">
                   </form>
                 </a></li>  
               </ul>
@@ -58,15 +52,8 @@
           <form class="d-flex" action="{% url 'movies:search' %}" method="post">
             {% csrf_token %}  
             <input class="form-control m-2" type="search" placeholder="제목을 입력하세요.." aria-label="Search" name="q" value="{{q}}">
-            {% comment %} <input type="submit" value="검색"> {% endcomment %}
             <button class="btn btn-secondary m-2" type="submit"><i class="fas fa-search"></i></button>
           </form>
-          {% comment %} <form class="form-inline my-2 my-lg-0 mx-5" action="{% url 'movies:search' %}" method="post">
-            {% csrf_token %}
-              <input class="form-control mr-sm-2" type="search" placeholder="제목을 입력하세요.." aria-label="Search" name="q" value="{{q}}">
-              <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
-          </form>
-        </div> {% endcomment %}
       </div>
       {% else %}
         <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Home</a>
@@ -74,24 +61,6 @@
         <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
       {% endif %}
     </nav>
-    {% comment %} <nav class="navbar justify-content-around" style="background-color: #696969;">
-      {% if user.is_authenticated %}
-      <h3 class="mx-3 text-white">Hello, {{ user.username }}</h3>
-      <a class="text-decoration-none text-white" href="{% url 'accounts:profile' user %}">Profile<a>
-      <a class="text-decoration-none text-white" href="{% url 'movies:index'%}">Home</a>
-      <a class="text-decoration-none text-white" href="{% url 'community:index'%}">Community</a>
-      <a class="text-decoration-none text-white" href="{% url 'community:create'%}">New Review</a>
-      <a class="text-decoration-none text-white" href="{% url 'movies:recommended' %}">Recommended</a>
-      <form class="mx-3" action="{% url 'accounts:logout' %}" method="POST">
-        {% csrf_token %}
-        <input class="btn btn-dark" type="submit" value="Logout">
-      </form>
-      {% else %}
-        <a class="text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
-        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
-      {% endif %}
-    </nav> {% endcomment %}
-{% comment %} background-color: #a9a9a9; {% endcomment %}
 <body class="bg-dark">
   <div class="container">
     {% block content %}
