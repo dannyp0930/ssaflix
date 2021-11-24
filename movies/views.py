@@ -14,10 +14,11 @@ from django.db.models import Q
 def pearson(s1, s2):
     s1_c = s1 - s1.mean()
     s2_c = s2 - s2.mean()
-    return np.sum(s1_c * s2_c) / np.sqrt(np.sum(s1_c ** 2) * np.sum(s2_c ** 2))
+    return np.sum(s1_c * s2_c) / (np.sqrt(np.sum(s1_c ** 2) * np.sum(s2_c ** 2)))
 
 def recommended(request):
 
+    # 유저가 등록한 평점과 다른 유저가 등록한 평점이 존재한다면
     if Rank.objects.filter(user_id=request.user) and Rank.objects.filter(~Q(user_id=request.user)):
 
         # 유저의 평점 데이터 불러오기
@@ -37,6 +38,7 @@ def recommended(request):
         matrix = data.pivot_table(index='movieId', columns='userId', values='rank')
         result = []
 
+        # 다른 유저들과 유사도 검사
         for side_id in matrix.columns:
             
             if side_id == request.user.id:
@@ -52,7 +54,7 @@ def recommended(request):
                 result.append((side_id, cor))
 
         # 가장 유사한 유저 값 생성
-        result = max(result, key=lambda r: -r[1])[0]
+        result = max(result, key=lambda r: r[1])[0]
 
         # 자신이 평가한 영화 id값
         movies = Rank.objects.filter(user_id=request.user.id).values('movie_id')
@@ -64,8 +66,14 @@ def recommended(request):
         # 내가 보지 않은 영화 id 후보 결정
         id_list = [value['movie_id'] for value in sim_movie if value['movie_id'] not in movies]
         recommends = Movie.objects.filter(id__in=id_list)
+        recommends_count = recommends.count()
+
+        # 추천 영화가 충분하지 않으면
+        if recommends_count < 12:
+            return False
 
         return recommends
+
     return False
 
 @require_safe
