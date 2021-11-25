@@ -70,18 +70,18 @@ def recommended(request):
         recommends_count = recommends.count()
 
         # 추천 영화가 충분하지 않으면
-        if recommends_count < 12:
-            return False
+        if recommends_count < 4:
+            return None
 
-        return recommends[:12]
+        return recommends[:4]
 
-    return False
+    return None
 
 @require_safe
 def index(request):
     movies_popular = Movie.objects.order_by('-popularity')[:12]
-    movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:12]
-    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('release_date')[:12]
+    movies_release = Movie.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:8]
+    movies_comeout = Movie.objects.filter(release_date__gt=datetime.now()).order_by('release_date')[:4]
     movies_recommend = None
     if request.user.is_authenticated:
         movies_recommend = recommended(request)
