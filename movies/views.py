@@ -85,7 +85,7 @@ def index(request):
     movies_recommend = None
     if request.user.is_authenticated:
         movies_recommend = recommended(request)
-    movies_random = Movie.objects.order_by('?')[:12]
+    movies_random = Movie.objects.order_by('?')[:4]
 
     context = {
         'movies_popular': movies_popular,

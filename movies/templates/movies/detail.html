@@ -37,10 +37,10 @@
   <div class="container border-0 bg-white mb-3 py-5" style="border-radius: 3rem;">
     <div class="row bg-secondary justify-content-between p-2 fw-bold">
       <div class="col text-start">
-        한 줄 평 {{ ranks|length }}
+        한 줄 평 {{ ranks | length }}
       </div>
       <div class="col text-end">
-        평점 {{ averatge_ranks }}
+        평점 {{ averatge_ranks | floatformat:2 }}
       </div>
     </div>
     {% if not user_rank %}
