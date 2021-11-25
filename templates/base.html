@@ -13,55 +13,55 @@
   <link rel="shortcut icon" href="{% static 'images/favicon3.ico' %}">
 </head>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top sticky-top">
-      {% if user.is_authenticated %}
       <div class="container-fluid" >
         <a href="{% url 'movies:index'%}"><img class="h-10 w-10" src="{% static 'images/SSAFLIX.png' %}" alt="logo"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'movies:index'%}" aria-current="page">Home</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Community
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                <li><a class="dropdown-item" href="{% url 'community:index'%}">Reviews</a></li>
-                <li><a class="dropdown-item" href="{% url 'community:create'%}">Create Review</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Account
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                <li><a class="dropdown-item" href="{% url 'accounts:profile' user %}">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" href="{% url 'accounts:logout' %}">
-                    <form action="{% url 'accounts:logout' %}" method="POST">
-                      {% csrf_token %}
-                      <input class="btn btn-link text-decoration-none text-dark p-0" type="submit" value="Logout">
-                    </form>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0">
+              {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link active" href="{% url 'movies:index'%}" aria-current="page">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Community
                   </a>
-                </li>  
-              </ul>
-            </li>
-          </ul>
-          <form class="d-flex" action="{% url 'movies:search' %}" method="post">
-            {% csrf_token %}  
-            <input class="form-control m-2" type="search" placeholder="제목을 입력하세요.." aria-label="Search" name="q" value="{{q}}">
-            <button class="btn btn-secondary m-2" type="submit"><i class="fas fa-search"></i></button>
-          </form>
-      </div>
-      {% else %}
-        <a class="mx-3 text-decoration-none text-white" href="{% url 'movies:index' %}">Home</a>
-        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
-        <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
-      {% endif %}
+                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                    <li><a class="dropdown-item" href="{% url 'community:index'%}">Reviews</a></li>
+                    <li><a class="dropdown-item" href="{% url 'community:create'%}">Create Review</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link active dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Account
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                    <li><a class="dropdown-item" href="{% url 'accounts:profile' user %}">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                        <form action="{% url 'accounts:logout' %}" method="POST">
+                          {% csrf_token %}
+                          <input class="btn btn-link text-decoration-none text-dark p-0" type="submit" value="Logout">
+                        </form>
+                      </a>
+                    </li>  
+                  </ul>
+                </li>
+                <form class="d-flex" action="{% url 'movies:search' %}" method="post">
+                  {% csrf_token %}  
+                  <input class="form-control m-2" type="search" placeholder="제목을 입력하세요.." aria-label="Search" name="q" value="{{q}}">
+                  <button class="btn btn-secondary m-2" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+              {% else %}
+                <a class="mx-3 text-decoration-none text-white" href="{% url 'movies:index' %}">Home</a>
+                <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:signup' %}">Signup</a>
+                <a class="mx-3 text-decoration-none text-white" href="{% url 'accounts:login' %}">Login</a>
+              {% endif %}
+            </ul>
+        </div>
     </nav>
 <body class="bg-dark">
   <div class="container" style="margin-bottom: 5rem;">
