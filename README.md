@@ -342,7 +342,7 @@ def created_string(self):
   ![Untitled](README.assets/Untitled 10.png)
 
   ```html
-  # accounts 
+  <!-- accounts -->
   
   {% load socialaccount %}
   {% block content %}
