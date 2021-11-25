@@ -5,7 +5,6 @@ from django.contrib.auth import (
     login as auth_login,
     logout as auth_logout,
     get_user_model,
-    models,
     update_session_auth_hash
 )    
 from django.contrib.auth.forms import (
