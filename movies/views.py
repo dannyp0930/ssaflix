@@ -160,7 +160,7 @@ def search(request):
     q = request.POST.get('q', "") 
 
     if q:
-        movies = Movie.objects.all().filter(title__icontains=q)
+        movies = Movie.objects.all().filter(title__icontains=q).order_by('release_date')
 
         context = {
             'movies' : movies,
