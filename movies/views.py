@@ -66,7 +66,7 @@ def recommended(request):
         
         # 내가 보지 않은 영화 id 후보 결정
         id_list = [value['movie_id'] for value in sim_movie if value['movie_id'] not in movies]
-        recommends = Movie.objects.filter(id__in=id_list)
+        recommends = Movie.objects.filter(id__in=id_list).order_by('-popularity')
         recommends_count = recommends.count()
 
         # 추천 영화가 충분하지 않으면
