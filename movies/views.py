@@ -73,7 +73,7 @@ def recommended(request):
         if recommends_count < 12:
             return False
 
-        return recommends
+        return recommends[:12]
 
     return False
 
