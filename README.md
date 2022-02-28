@@ -199,7 +199,7 @@ def recommended(request):
 
 - 로그인 유저가 평가한 영화 정보가 존재할 경우
 
-![Untitled_1](README.assets/Untitled_1.png)
+![Untitled](README.assets/Untitled_1.png)
 
 - 로그인 유저가 평가한 영화 정보가 없거나 적을 경우
   - 랜덤으로 추천
