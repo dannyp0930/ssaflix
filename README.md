@@ -199,12 +199,12 @@ def recommended(request):
 
 - 로그인 유저가 평가한 영화 정보가 존재할 경우
 
-![Untitled](README.assets/Untitled 1.png)
+![Untitled](README.assets/Untitled_1.png)
 
 - 로그인 유저가 평가한 영화 정보가 없거나 적을 경우
   - 랜덤으로 추천
 
-![Untitled](README.assets/Untitled 2.png)
+![Untitled](README.assets/Untitled_2.png)
 
 ### 영화 검색 기능
 
@@ -230,21 +230,21 @@ def search(request):
 
   - 검색어가 없을 경우
 
-    ![Untitled](README.assets/Untitled 3.png)
+    ![Untitled](README.assets/Untitled_3.png)
 
   - 검색 결과가 없을 경우
 
-    ![Untitled](README.assets/Untitled 4.png)
+    ![Untitled](README.assets/Untitled_4.png)
 
   - 알맞은 검색 결과를 찾았을 경우
 
-    ![Untitled](README.assets/Untitled 5.png)
+    ![Untitled](README.assets/Untitled_5.png)
 
 ### 영화 디테일
 
 - 유튜브에 영화 트레일러 영상이 존재한다면 유튜브 영상 송출
 
-![Untitled](README.assets/Untitled 6.png)
+![Untitled](README.assets/Untitled_6.png)
 
 ```html
 <!-- detail.html -->
@@ -268,13 +268,13 @@ def search(request):
   - 유저들의 평균 평점 산출하여 표시
   - 본인 댓글 삭제 및 수정 기능
 
-![Untitled](README.assets/Untitled 7.png)
+![Untitled](README.assets/Untitled_7.png)
 
 ## community
 
 ### 리뷰 화면
 
-![Untitled](README.assets/Untitled 8.png)
+![Untitled](README.assets/Untitled_8.png)
 
 ```python
 # models.py
@@ -298,7 +298,7 @@ def created_string(self):
 
 ### 리뷰 디테일
 
-![Untitled](README.assets/Untitled 9.png)
+![Untitled](README.assets/Untitled_9.png)
 
 - 리뷰 작성 시간과 마찬가지로 댓글의 작성시간과 수정시간을 표시
 - AJAX 통신을 통해 페이지 새로고침 없이 리뷰에 대한 좋아요 수를 반영
@@ -339,7 +339,7 @@ def created_string(self):
 
 - google OAuth 클라이언트를 통해 별도의 회원가입 필요없이 구글 로그인이 가능하도록 함
 
-  ![Untitled](README.assets/Untitled 10.png)
+  ![Untitled](README.assets/Untitled_10.png)
 
   ```html
   <!-- accounts -->
@@ -419,19 +419,19 @@ def created_string(self):
       photo = models.ImageField(upload_to='images/', blank=True)
   ```
 
-  ![Untitled](README.assets/Untitled 11.png)
+  ![Untitled](README.assets/Untitled_11.png)
 
 - 본인 프로필을 보는 경우
 
   - 정보 수정, 회원탈퇴 기능 구현
 
-  ![Untitled](README.assets/Untitled 12.png)
+  ![Untitled](README.assets/Untitled_12.png)
 
 - 다른 유저의 프로필을 보는 경우
 
   - 유저간 팔로우 기능
 
-  ![Untitled](README.assets/Untitled 13.png)
+  ![Untitled](README.assets/Untitled_13.png)
 
 ## 배포 서버 URL
 
